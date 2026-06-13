@@ -1,0 +1,12 @@
+import { dbSla } from "./src/server/db-sla";
+async function run() {
+  try {
+    const [rows] = await dbSla.query("SELECT id, name, lastname, username, email FROM user_details LIMIT 5");
+    console.log(rows);
+    process.exit(0);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+}
+run();

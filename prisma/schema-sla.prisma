@@ -1,0 +1,984 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma-sla"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("SLA_DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model am_appc_det {
+  app_id   String  @db.VarChar(10)
+  cat_id   Int
+  cat_name String? @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ap_check {
+  tst String @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model api_tab {
+  cost_centre            String  @db.VarChar(5)
+  cost_centre_name       String  @db.VarChar(255)
+  cost_centre_manager_sn String? @db.VarChar(255)
+  division               String? @db.VarChar(255)
+  department             String? @db.VarChar(255)
+  user_id                Int?
+  g10_manager            String? @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model api_users {
+  username String @db.VarChar(10)
+  password String @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model app_access {
+  emp_no   String @db.VarChar(255)
+  app_name String @db.VarChar(100)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model app_tracking {
+  app_id     String   @db.VarChar(5)
+  staff_no   String   @db.VarChar(255)
+  status     String   @db.VarChar(20)
+  acc_date   DateTime @db.Date
+  rec_method String   @db.VarChar(20)
+  t_number   Int
+  remarks    String?  @db.Text
+  id         Int
+  app_access String?  @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model app_tracking_sup_team {
+  id       Int
+  sup_team String @db.VarChar(100)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model app_tracking_sup_user {
+  id       Int
+  sup_user Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model appc_det {
+  id           String  @db.VarChar(5)
+  name         String  @db.VarChar(255)
+  apc_sn       String? @db.VarChar(50)
+  apo_sn       String? @db.VarChar(50)
+  cat_id       Int?
+  on_board_cat Int?
+  i_id         Int
+  off_cat      Int?
+  helpdesk_id  Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model apps {
+  id        String @db.VarChar(10)
+  controler String @db.VarChar(15)
+  owner     String @db.VarChar(15)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model auto_close {
+  req_id Int
+  status Int @default(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model bul_user_req {
+  req_no Int
+  status Int @default(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model bulk_users {
+  user_id Int
+  emp_no  String @db.VarChar(20)
+  req_no  Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cat_id {
+  id       Int
+  cat_name String @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model catering_app_tracking {
+  id         Int
+  app_id     Int
+  user_id    Int
+  status     String   @db.VarChar(15)
+  t_no       Int
+  date_time  DateTime @default(now()) @db.DateTime(0)
+  user_level String?  @db.VarChar(100)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model catering_app_user_tracking {
+  app_id  Int
+  user_id Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model catering_apps {
+  id       Int
+  app_name String @db.VarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model catering_apps_user_levels {
+  cat_user   Int
+  user_level String @db.VarChar(50)
+  app_id     Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cc {
+  cost_c Int
+  cc_sn  String @db.VarChar(20)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cea_approver {
+  req_id   Int
+  app_role String   @db.VarChar(255)
+  app_user Int
+  date     DateTime @default(now()) @db.DateTime(0)
+  comment  String   @db.Text
+  id       Int
+  status   Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cea_val {
+  cea_id    Int
+  cea_value Int
+  status    Int @default(0)
+  cc        Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model clearance_team {
+  id         Int
+  name       String @db.VarChar(255)
+  con_number Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cr_approver {
+  req_id      Int
+  main_req_id Int
+  app_role    String   @db.VarChar(255)
+  app_user    Int
+  date        DateTime @default(now()) @db.DateTime(0)
+  id          Int
+  status      Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cr_att {
+  id    Int
+  link  String @db.VarChar(255)
+  name  String @db.Text
+  cr_id Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cr_data {
+  id                            Int
+  application                   String?  @db.VarChar(255)
+  attachment                    String?  @db.Text
+  business_requirement          String?  @db.Text
+  downtime                      String?  @db.VarChar(255)
+  urgent_changerequest          String?  @db.VarChar(255)
+  urgent_changerequest_discribe String?  @db.Text
+  required_date                 String?  @db.VarChar(255)
+  remark                        String?  @db.VarChar(255)
+  dbteam_task                   String?  @db.Text
+  dbteam_othertask              String?  @db.VarChar(255)
+  dbteam_change_discribe        String?  @db.Text
+  ntteam_task                   String?  @db.Text
+  ntteam_othertask              String?  @db.Text
+  ntteam_change_discribe        String?  @db.Text
+  dhcp_macaddress               String?  @db.VarChar(255)
+  dhcp_devicemode               String?  @db.VarChar(255)
+  dhcp_deviceloction            String?  @db.VarChar(255)
+  dhcp_usercontact              String?  @db.VarChar(255)
+  wanteam_task                  String?  @db.Text
+  wanteam_change_discribe       String?  @db.Text
+  vpn_contract_start_date       String?  @db.VarChar(255)
+  vpn_contract_end_date         String?  @db.VarChar(255)
+  vpn_access_start_date         String?  @db.VarChar(255)
+  vpn_access_end_date           String?  @db.VarChar(255)
+  vpn_nda                       String?  @db.VarChar(255)
+  vpn_nda_attachment            String?  @db.VarChar(255)
+  vpn_action                    String?  @db.VarChar(255)
+  ftp_expirydate                String?  @db.VarChar(255)
+  ftp_action                    String?  @db.VarChar(255)
+  desktopteam_task              String?  @db.Text
+  desktopteam_othertask         String?  @db.Text
+  desktopteam_change_discribe   String?  @db.Text
+  networkteam_change_discribe   String?  @db.Text
+  created_at                    DateTime @default(now()) @db.Timestamp(0)
+  r_id                          Int
+  teams                         String   @db.Text
+  downtime_start                String?  @db.VarChar(255)
+  downtime_end                  String?  @db.VarChar(255)
+  user_contact_number           String?  @db.VarChar(255)
+  networkteam_task              String?  @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cr_inf_teams {
+  cr_id    Int
+  team     Int
+  req_id   Int
+  status   Int    @default(0)
+  risk_val Float?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cr_it_teams {
+  cr_id    Int
+  team     Int
+  req_id   Int
+  status   Int    @default(0)
+  risk_val Float?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model cr_main_it_sec {
+  id             Int
+  r_id           Int
+  team           String? @db.Text
+  attachment     String? @db.Text
+  it_security    String? @db.Text
+  wan            String? @db.Text
+  desktop        String? @db.Text
+  nt             String? @db.Text
+  db_team        String? @db.Text
+  required_date  String  @db.Text
+  remark         String? @db.Text
+  downtime_start String? @db.VarChar(255)
+  downtime_end   String? @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cr_sla {
+  id           Int
+  team         String    @db.VarChar(20)
+  req_date     String    @db.VarChar(50)
+  created_date DateTime  @db.Date
+  type         Int
+  task_id      Int
+  main_cr      Int
+  resl         Int       @default(0)
+  pending_days Int?      @default(0)
+  status       Int       @default(0)
+  left_days    Int?
+  ex_close_day DateTime? @db.Date
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model exit_int {
+  t_no        Int
+  exit_int_id Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_rec {
+  id            Int
+  month         String  @db.VarChar(15)
+  month_no      Int?
+  year          Int
+  descr         String  @db.Text
+  balance       Float
+  agr_balance   String? @db.VarChar(10)
+  rec_sup       String? @db.VarChar(10)
+  no_open       String? @db.VarChar(10)
+  item_sup      String? @db.VarChar(100)
+  fs_cap        String  @db.VarChar(30)
+  freq          String  @db.VarChar(30)
+  owner         String  @db.VarChar(100)
+  reconciler    String  @db.VarChar(100)
+  reconciler_sn String  @db.VarChar(20)
+  reviewer      String  @db.VarChar(100)
+  reviewer_sn   String  @db.VarChar(20)
+  status        Int     @default(3)
+  remarks       String? @db.Text
+  nominal       Int
+  message       String? @db.VarChar(10)
+  i_no          String? @db.VarChar(11)
+  rec_status    String? @db.VarChar(10)
+  edit_tick     String? @db.VarChar(11)
+  edit_user     String? @db.VarChar(100)
+  day_90        String? @db.VarChar(255)
+  prior_pending String? @db.VarChar(5)
+  prec_end      String? @db.VarChar(50)
+  item_pen      String? @db.VarChar(50)
+  cr_code       Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_rec_attach {
+  id     Int
+  rec_id Int
+  link   String @db.VarChar(255)
+  name   String @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_rec_rel {
+  id     Int
+  t_no   Int
+  status String @db.VarChar(20)
+  rel_id Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_rec_search {
+  id          Int
+  user_id     Int
+  month       String?  @db.Text
+  year        Int
+  create_time DateTime @default(now()) @db.DateTime(0)
+  token       String   @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model finance_recon {
+  n_code          Int
+  recon_staff_no  String? @db.VarChar(11)
+  review_staff_no String? @db.VarChar(11)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model helpdesk {
+  xid   Int
+  id    Int
+  name  String  @db.Text
+  extno String? @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model helpdesk_manager {
+  helpdesk_name String @db.VarChar(255)
+  manager_id    Int
+  id            Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model hod {
+  division   String  @db.VarChar(255)
+  department String  @db.VarChar(255)
+  hod_sn     String? @db.VarChar(50)
+  mitbsm     String? @db.VarChar(50)
+  itbsm      String? @db.VarChar(50)
+  id         Int
+  hod_emp    String? @db.VarChar(20)
+  itbsm_emp  String? @db.VarChar(15)
+  mit_emp    String? @db.VarChar(15)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model hold {
+  req_no  Int
+  link_id Int
+  sts     Int @default(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model hold_approvals {
+  t_no                Int
+  approval_request_id Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_application {
+  id              Int
+  name            String  @db.VarChar(255)
+  task_id         Int?
+  service_ref     String? @db.VarChar(50)
+  service         String? @db.VarChar(255)
+  service_desc    String? @db.Text
+  platform        String? @db.Text
+  status          String? @db.VarChar(10)
+  service_owner   Int?
+  vendor          Int?
+  hosted          String? @db.VarChar(50)
+  service_hour    String? @db.VarChar(50)
+  sr_p1           String? @db.VarChar(50)
+  sr_p2           String? @db.VarChar(50)
+  sr_p3           String? @db.VarChar(50)
+  sr_p4           String? @db.VarChar(50)
+  sr_avl          String? @db.VarChar(50)
+  mt_rec          String? @db.VarChar(50)
+  rto             String? @db.VarChar(50)
+  rpo             String? @db.VarChar(50)
+  dr_avl          String? @db.VarChar(10)
+  vendor_service  String? @db.VarChar(50)
+  v_sr_p1         String? @db.VarChar(50)
+  v_sr_p2         String? @db.VarChar(50)
+  v_sr_p3         String? @db.VarChar(50)
+  v_sr_p4         String? @db.VarChar(50)
+  v_avl           String? @db.VarChar(10)
+  v_dr_mth_rec    String? @db.VarChar(50)
+  v_rto           String? @db.VarChar(50)
+  v_rpo           String? @db.VarChar(50)
+  v_dr_avl        String? @db.VarChar(50)
+  division        String? @db.Text
+  customer        Int?
+  cus_designation String? @db.VarChar(100)
+  bis_impact      String? @db.VarChar(20)
+  vendor_agr      String? @db.VarChar(10)
+  user_vol        Int?
+  vendor_man      Int?
+  vendor_con      String? @db.Text
+  notes           String? @db.Text
+  ad_in           String? @db.VarChar(50)
+  in_app          String? @db.VarChar(255)
+  on_board_cat    Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_cover {
+  id      Int
+  v_no    String @db.VarChar(10)
+  d_ref   String @db.VarChar(255)
+  d_owner String @db.VarChar(255)
+  p_rev   String @db.VarChar(255)
+  p_by    String @db.VarChar(255)
+  r_by    String @db.VarChar(255)
+  a_by    String @db.VarChar(255)
+  date    String @db.VarChar(50)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_customer {
+  serial_number String @db.VarChar(11)
+  customer_name String @db.VarChar(255)
+  app_num       Int
+  app_name      String @db.Text
+  service_hour  String @db.VarChar(50)
+  sr_p1         Int
+  sr_p2         Int
+  sr_p3         Int
+  sr_p4         Int
+  in_p1         Int
+  in_p2         Int
+  in_p3         Int
+  in_p4         Int
+  service_owner Int
+  itbsm         Int
+  cus_con       Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_network {
+  service_ref   String @db.VarChar(100)
+  service_cat   String @default("0") @db.VarChar(100)
+  service       String @db.VarChar(100)
+  service_des   String @db.Text
+  service_ar    String @db.Text
+  service_owner Int
+  vendor        String @db.VarChar(100)
+  service_hour  String @db.VarChar(100)
+  sr_p1         String @db.VarChar(10)
+  sr_p2         String @db.VarChar(10)
+  sr_p3         String @db.VarChar(10)
+  sr_p4         String @db.VarChar(10)
+  sr_avl        Float
+  dr_mr         String @db.VarChar(100)
+  dr_rto        String @db.VarChar(100)
+  dr_rpo        String @db.VarChar(100)
+  dr_avl        String @db.VarChar(100)
+  vendor_sh     String @db.VarChar(100)
+  v_p1          String @db.VarChar(10)
+  v_p2          String @db.VarChar(10)
+  v_p3          String @db.VarChar(10)
+  v_p4          String @db.VarChar(10)
+  v_avl         Float
+  v_dr_mr       String @db.VarChar(100)
+  v_dr_rto      String @db.VarChar(100)
+  v_dr_rpo      String @db.VarChar(100)
+  v_dr_avl      String @db.VarChar(10)
+  division      String @db.VarChar(255)
+  cus_name      Int
+  cus_des       String @db.VarChar(255)
+  v_agr         String @db.VarChar(20)
+  user_vol      Int?
+  itbsm         Int
+  vendor_con    String @db.Text
+  notes         String @db.Text
+  bis_impact    String @db.VarChar(20)
+  id            Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_reminder {
+  id         Int
+  rem_num    Int
+  rev_ticket Int
+  rem_date   DateTime @db.Date
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_rev_logs {
+  id           Int
+  service      String    @db.VarChar(50)
+  updated_date DateTime  @db.Date
+  t_no         Int
+  service_ref  String    @db.VarChar(50)
+  type         String    @db.VarChar(50)
+  s_owner      Int
+  r_staff      Int
+  r_date       DateTime? @db.Date
+  r_type       String?   @db.VarChar(50)
+  changes      String?   @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model is_rev_ticket {
+  t_no        Int
+  service_app String    @db.VarChar(255)
+  c_date      DateTime? @db.Date
+  rev_status  Int       @default(0)
+  rev_type    Int?
+  rev_method  Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model is_service_owner {
+  id      Int
+  s_owner Int
+  list    String? @db.Text
+  s_list  String? @db.Text
+  type    Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_services {
+  service_cat String @db.VarChar(50)
+  service     String @db.VarChar(50)
+  service_des String @db.Text
+  id          Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model is_vendor {
+  id          Int
+  vendor_ref  String @db.VarChar(100)
+  vendor      String @db.VarChar(255)
+  descrip     String @db.Text
+  status      String @db.VarChar(10)
+  b_impact    String @db.VarChar(10)
+  v_agr       String @db.VarChar(10)
+  itbsm       Int
+  v_con       String @db.Text
+  service_rew String @db.VarChar(10)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model off_board_hod_line {
+  t_no Int
+  hod  Int
+  line Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model off_board_select {
+  id        Int
+  selection String @db.Text
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model off_board_sub_ticket {
+  off_ticket Int
+  sub_ticket Int
+  status     Int     @default(0)
+  app_id     String? @db.VarChar(255)
+  emp_id     String? @db.VarChar(50)
+  it_cl      Int     @default(0)
+  check_exit Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model onboard_app {
+  t_no Int
+  app  String @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model oracle {
+  Item_Code          String   @db.VarChar(255)
+  Issue_DateTime     String   @db.VarChar(255)
+  Cost_Centre        String   @db.VarChar(10)
+  Account            String   @db.VarChar(255)
+  Issued_to          String   @db.VarChar(255)
+  Remarks            String   @db.VarChar(255)
+  Issued_by          String   @db.VarChar(255)
+  Request_Number     String   @db.VarChar(255)
+  Requested_Date     String   @db.VarChar(25)
+  Item_Description   String   @db.Text
+  Item_Serial_number String   @db.VarChar(255)
+  Asset_Number       String   @db.VarChar(255)
+  I_date             DateTime @default(now()) @db.DateTime(0)
+  id                 Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model qtsn {
+  id    String @db.VarChar(4)
+  descr String @db.VarChar(50)
+  val   Int
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model report_itbsm_manage {
+  division        String? @db.VarChar(255)
+  department      String? @db.VarChar(255)
+  service_owner   String? @db.VarChar(511)
+  employee_number String? @db.VarChar(11)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model report_mitbsm_manage {
+  name            String? @db.VarChar(511)
+  division        String? @db.VarChar(255)
+  employee_number String? @db.VarChar(11)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model report_single_role {
+  long_name       String? @db.VarChar(255)
+  name            String? @db.VarChar(511)
+  employee_number String? @db.VarChar(11)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model service_categories {
+  id               Int
+  service_category String @db.VarChar(255)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model single_role {
+  name       String? @db.VarChar(255)
+  lastname   String? @db.VarChar(255)
+  email      String? @db.VarChar(255)
+  short_name String? @db.VarChar(50)
+  long_name  String? @db.VarChar(255)
+  id         Int?
+  user_id    Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model slc_dep {
+  id          Int
+  dep_name    String @db.VarChar(255)
+  dep_man     String @db.VarChar(255)
+  sec_manager String @db.VarChar(255)
+  dep_man_id  Int?
+  sec_man_id  Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model team_assign {
+  req_no  Int
+  date_as DateTime @db.Date
+  status  Int      @default(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model temp_user_details {
+  id              Int
+  name            String? @db.VarChar(255)
+  lastname        String? @db.VarChar(255)
+  username        String? @db.VarChar(255)
+  email           String? @db.VarChar(255)
+  other_email     String? @db.VarChar(255)
+  doc             String? @db.VarChar(255)
+  mobile          String? @db.VarChar(20)
+  office          String? @db.VarChar(20)
+  other           String? @db.VarChar(20)
+  fax             String? @db.VarChar(20)
+  address         String? @db.VarChar(255)
+  phone           String? @db.VarChar(20)
+  city            String? @db.VarChar(255)
+  country         String? @db.VarChar(50)
+  birthday        String? @db.VarChar(15)
+  position        String? @db.VarChar(255)
+  department      String? @db.VarChar(255)
+  manager_id      String? @db.VarChar(11)
+  location        String? @db.VarChar(100)
+  is_external     String? @db.VarChar(10)
+  type            String? @db.VarChar(10)
+  user_type       String? @db.VarChar(10)
+  role_name       String? @db.VarChar(100)
+  is_disabled     String? @db.VarChar(11)
+  is_deleted      String? @db.VarChar(11)
+  employee_number String? @db.VarChar(11)
+  ticket_number   Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model ticket_emp {
+  t_no   Int
+  emp_no String @db.VarChar(100)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model user_accounts {
+  id                    Int
+  company_id            Int
+  teamid                String             @db.Text
+  full_name             String             @db.VarChar(255)
+  email                 String             @db.VarChar(255)
+  phone_number          String?            @db.VarChar(20)
+  role                  user_accounts_role
+  password_hashed       String             @db.Text
+  is_active             Boolean?           @default(true)
+  model_list_hosts      Boolean?           @default(false)
+  model_get_host_by_id  Boolean?           @default(false)
+  model_list_sites      Boolean?           @default(false)
+  model_list_devices    Boolean?           @default(false)
+  model_get_isp_metrics Boolean?           @default(false)
+  created_at            DateTime           @default(now()) @db.Timestamp(0)
+  updated_at            DateTime           @default(now()) @db.Timestamp(0)
+  pass                  Int                @db.TinyInt
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model user_details {
+  id              Int
+  name            String? @db.VarChar(255)
+  lastname        String? @db.VarChar(255)
+  username        String? @db.VarChar(255)
+  email           String? @db.VarChar(255)
+  other_email     String? @db.VarChar(255)
+  doc             String? @db.VarChar(255)
+  mobile          String? @db.VarChar(255)
+  office          String? @db.VarChar(255)
+  other           String? @db.VarChar(20)
+  fax             String? @db.VarChar(20)
+  address         String? @db.VarChar(255)
+  phone           String? @db.VarChar(20)
+  city            String? @db.VarChar(255)
+  country         String? @db.VarChar(50)
+  birthday        String? @db.VarChar(15)
+  position        String? @db.VarChar(255)
+  department      String? @db.VarChar(255)
+  manager_id      String? @db.VarChar(11)
+  location        String? @db.VarChar(100)
+  is_external     String? @db.VarChar(10)
+  type            String? @db.VarChar(10)
+  user_type       String? @db.VarChar(10)
+  role_name       String? @db.VarChar(100)
+  is_disabled     String? @db.VarChar(11)
+  is_deleted      String? @db.VarChar(11)
+  employee_number String? @db.VarChar(11)
+  ticket_no       Int?
+  cneint          Int     @default(0)
+  mgdp            Int     @default(0)
+  cpmit           Int     @default(0)
+  tld             Int     @default(0)
+  mho             Int     @default(0)
+  mitbs           Int     @default(0)
+  cfo             Int     @default(0)
+  ceo             Int     @default(0)
+  fnm             Int     @default(0)
+  hoit            Int     @default(0)
+  it_po           Int?    @default(0)
+  eng_po          Int     @default(0)
+  gp_po           Int     @default(0)
+  pt_po           Int     @default(0)
+  ge_po           Int     @default(0)
+  it_pro          Int     @default(0)
+  cnent           Int     @default(0)
+  csm             Int     @default(0)
+  itsm            Int     @default(0)
+  sdm             Int     @default(0)
+  db_lead         Int     @default(0)
+  nt_lead         Int     @default(0)
+  wan_lead        Int     @default(0)
+  ma              Int     @default(0)
+  smit            Int     @default(0)
+  epa             Int     @default(0)
+  opa             Int     @default(0)
+  gpa             Int     @default(0)
+  ppa             Int     @default(0)
+  ghpa            Int     @default(0)
+  itpa            Int     @default(0)
+  net_lead        Int     @default(0)
+  rm              Int?
+  g10             Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model user_roles {
+  id         Int
+  short_name String @db.VarChar(50)
+  long_name  String @db.VarChar(255)
+  user_id    Int
+
+  @@ignore
+}
+
+enum user_accounts_role {
+  admin
+  user
+  team_lead
+  admin_com
+  team_member
+  adminstration
+}

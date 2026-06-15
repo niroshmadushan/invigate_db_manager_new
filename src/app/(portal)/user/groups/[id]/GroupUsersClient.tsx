@@ -5,6 +5,8 @@ import { api } from "~/trpc/react";
 import { Loader2, Hash, User, Mail, AtSign, Search, ChevronLeft, ChevronRight, ArrowUpDown, ChevronUp, ChevronDown, ArrowLeft, Trash2, Plus, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 export function GroupUsersClient({ groupId }: { groupId: number }) {
   const router = useRouter();
@@ -14,6 +16,7 @@ export function GroupUsersClient({ groupId }: { groupId: number }) {
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
   const [userToRemove, setUserToRemove] = useState<{ id: number, name: string } | null>(null);
   const itemsPerPage = 25;
+  const { canView, canEdit, isLoading: isPermsLoading } = usePermissions("groups");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -91,6 +94,18 @@ export function GroupUsersClient({ groupId }: { groupId: number }) {
   const goToNextPage = () => setCurrentPage((p) => Math.min(totalPages, p + 1));
   const goToPrevPage = () => setCurrentPage((p) => Math.max(1, p - 1));
 
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
+
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full relative">
       <div className="flex flex-col h-full bg-white dark:bg-[#151923] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm shadow-slate-200/50 dark:shadow-none relative">
@@ -115,14 +130,16 @@ export function GroupUsersClient({ groupId }: { groupId: number }) {
             </div>
           </div>
           
-          <button
-            suppressHydrationWarning
-            onClick={() => router.push(`/user/groups/${groupId}/add`)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Add Users
-          </button>
+          {canEdit && (
+            <button
+              suppressHydrationWarning
+              onClick={() => router.push(`/user/groups/${groupId}/add`)}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Add Users
+            </button>
+          )}
         </div>
 
         <div className="flex-1 overflow-auto custom-scrollbar relative">
@@ -222,14 +239,16 @@ export function GroupUsersClient({ groupId }: { groupId: number }) {
                       {record.email}
                     </td>
                     <td className="px-6 py-2.5 text-right">
-                      <button
-                        onClick={() => setUserToRemove({ id: record.id, name: record.name })}
-                        disabled={removeUserMutation.isPending}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-[#151923] border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 shadow-sm disabled:opacity-50"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        Remove
-                      </button>
+                      {canEdit && (
+                        <button
+                          onClick={() => setUserToRemove({ id: record.id, name: record.name })}
+                          disabled={removeUserMutation.isPending}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-[#151923] border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 shadow-sm disabled:opacity-50"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          Remove
+                        </button>
+                      )}
                     </td>
                   </motion.tr>
                 ))}

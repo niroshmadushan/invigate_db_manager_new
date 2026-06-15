@@ -4,6 +4,8 @@ import { api } from "~/trpc/react";
 import { Loader2, User, Briefcase, Mail, Building, MapPin, Phone, Hash, ShieldAlert, CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 const ROLE_COLUMNS = [
   "ticket_no", "cneint", "mgdp", "cpmit", "tld", "mho", "mitbs", "cfo", "ceo", "fnm", 
@@ -14,11 +16,26 @@ const ROLE_COLUMNS = [
 
 export function UserProfileClient({ userId }: { userId: number }) {
   const router = useRouter();
+  const { canView, isLoading: isPermsLoading } = usePermissions("single-user");
 
-  const { data: userProfile, isLoading, isError } = api.singleUser.getUserProfile.useQuery(
+  const { data: userProfile, isLoading: isProfileLoading, isError } = api.singleUser.getUserProfile.useQuery(
     { userId },
-    { enabled: !!userId }
+    { enabled: !!userId && canView }
   );
+
+  const isLoading = isProfileLoading || isPermsLoading;
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full bg-slate-50 dark:bg-[#0f1219] rounded-2xl">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full">

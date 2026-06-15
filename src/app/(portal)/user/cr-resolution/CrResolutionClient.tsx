@@ -5,6 +5,8 @@ import { api } from "~/trpc/react";
 import { Loader2, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Hash, Users, Calendar, Ticket, CheckCircle2, XCircle, Shield, Server, AppWindow, Clock, Activity } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 type SortColumn = "id" | "team" | "created_date" | "task_id" | "main_cr" | "resl" | "type";
 type SortDirection = "asc" | "desc";
@@ -16,6 +18,7 @@ export function CrResolutionClient() {
   const [sortColumn, setSortColumn] = useState<SortColumn>("id");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const rowsPerPage = 20;
+  const { canView, isLoading: isPermsLoading } = usePermissions("cr-resolution");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -70,6 +73,18 @@ export function CrResolutionClient() {
   const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
   const startIndex = (page - 1) * rowsPerPage;
   const currentData = sortedData.slice(startIndex, startIndex + rowsPerPage);
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
 
   // Helper renderers for UI state
   const renderResolutionBadge = (resl: number) => {

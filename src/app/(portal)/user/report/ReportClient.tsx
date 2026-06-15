@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import * as XLSX from 'xlsx';
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 type ExportType = 'excel' | 'csv';
 
@@ -15,6 +17,7 @@ export function ReportClient() {
   const searchParams = useSearchParams();
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const { canView, isLoading: isPermsLoading } = usePermissions("report");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -132,6 +135,18 @@ export function ReportClient() {
       setDownloadingId(null);
     }
   };
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
 
   return (
     <div className="flex flex-col w-full">

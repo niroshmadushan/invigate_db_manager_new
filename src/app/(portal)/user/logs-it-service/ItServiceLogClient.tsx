@@ -5,6 +5,8 @@ import { api } from "~/trpc/react";
 import { Loader2, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Hash, ClipboardList, Calendar, User, Search as SearchIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 type SortColumn = "id" | "service" | "updated_date" | "service_owner";
 type SortDirection = "asc" | "desc";
@@ -16,6 +18,7 @@ export function ItServiceLogClient() {
   const [sortColumn, setSortColumn] = useState<SortColumn>("id");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc"); // default desc for logs
   const rowsPerPage = 20;
+  const { canView, isLoading: isPermsLoading } = usePermissions("logs-it-service");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -70,6 +73,18 @@ export function ItServiceLogClient() {
   const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
   const startIndex = (page - 1) * rowsPerPage;
   const currentData = sortedData.slice(startIndex, startIndex + rowsPerPage);
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full relative">

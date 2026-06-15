@@ -10,28 +10,25 @@ import {
 
 // List of all restrictable modules from the Sidebar
 const SYSTEM_MODULES = [
+  { id: "departments", name: "Departments", group: "Sri Lankan Catering" },
+  
   { id: "applications", name: "Applications", group: "Organizational" },
   { id: "divisions", name: "Divisions", group: "Organizational" },
   { id: "mitbs", name: "MITBS", group: "Organizational" },
   { id: "itbsm", name: "ITBSM", group: "Organizational" },
+  { id: "cost-center", name: "Cost Center", group: "Organizational" },
+  { id: "single-user", name: "Single User", group: "Organizational" },
+  { id: "groups", name: "Groups", group: "Organizational" },
+  { id: "help-desk", name: "Help Desk", group: "Organizational" },
   
-  { id: "cost-center", name: "Cost Center", group: "Access & Security" },
-  { id: "single-user", name: "Single User", group: "Access & Security" },
-  { id: "user-director", name: "User Director", group: "Access & Security" },
-  { id: "groups", name: "Groups", group: "Access & Security" },
+  { id: "logs-it-service", name: "Logs - (IT-Service)", group: "IT services Catalogue" },
+  { id: "reminders", name: "Reminders", group: "IT services Catalogue" },
   
-  { id: "departments", name: "Departments", group: "Operations" },
+  { id: "cr-resolution", name: "CR Resolution", group: "Clearing Request" },
+  { id: "report", name: "Report", group: "Clearing Request" },
   
-  { id: "help-desk", name: "Help Desk", group: "Support" },
-  { id: "logs", name: "Logs", group: "Support" },
-  { id: "logs-it-service", name: "Logs - (IT-Service)", group: "Support" },
-  { id: "reminders", name: "Reminders", group: "Support" },
-  
-  { id: "cr-resolution", name: "CR Resolution", group: "Intelligence" },
-  { id: "report", name: "Report", group: "Intelligence" },
-  
-  { id: "app-access", name: "App Access", group: "General" },
-  { id: "app-tracking", name: "App Tracking", group: "General" },
+  { id: "app-access", name: "App Access", group: "Tracking Console" },
+  { id: "app-tracking", name: "App Tracking", group: "Tracking Console" },
 ];
 
 export default function RolesManagementPage() {
@@ -137,20 +134,20 @@ export default function RolesManagementPage() {
   }, {} as Record<string, typeof SYSTEM_MODULES>);
 
   return (
-    <div className="p-8 max-w-7xl mx-auto font-sans">
+    <div className="p-4 lg:p-6 max-w-7xl mx-auto font-sans">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-3">
             <ShieldCheck className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-            Role-Based Access Control
+            Roles
           </h1>
-          <p className="text-sm font-bold text-slate-500 dark:text-slate-400 mt-2">
+          <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mt-2">
             Create custom permission profiles to strictly isolate module access for users.
           </p>
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-colors shadow-sm"
+          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-[12px] font-bold uppercase tracking-wider transition-colors shadow-sm"
         >
           <Plus className="w-4 h-4" />
           Create New Role
@@ -172,13 +169,13 @@ export default function RolesManagementPage() {
             key={role.id} 
             className="group flex flex-col bg-slate-50 dark:bg-[#151923] border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-purple-500/50 dark:hover:border-purple-500/50 transition-all duration-300 overflow-hidden"
           >
-            <div className="p-6 border-b border-slate-200/50 dark:border-slate-800/50 flex items-start justify-between">
+            <div className="p-4 border-b border-slate-200/50 dark:border-slate-800/50 flex items-start justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/50 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300">
                   <Shield className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-slate-900 dark:text-white text-lg tracking-tight">{role.name}</h3>
+                  <h3 className="font-extrabold text-slate-900 dark:text-white text-sm tracking-tight">{role.name}</h3>
                   <div className="flex items-center gap-1.5 mt-1">
                     <Users className="w-3.5 h-3.5 text-blue-500" />
                     <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">{role._count.users} Assigned Users</span>
@@ -186,15 +183,15 @@ export default function RolesManagementPage() {
                 </div>
               </div>
             </div>
-            <div className="p-6 flex-1 bg-white dark:bg-[#0B0F19]">
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
+            <div className="p-4 flex-1 bg-white dark:bg-[#0B0F19]">
+              <p className="text-[12px] font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
                 {role.description || "No specific description provided for this role profile."}
               </p>
             </div>
-            <div className="p-4 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-end gap-3 bg-slate-50/50 dark:bg-[#151923]/50">
+            <div className="p-3 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-end gap-3 bg-slate-50/50 dark:bg-[#151923]/50">
               <button 
                 onClick={() => openModal(role)}
-                className="flex items-center gap-2 px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200 dark:hover:bg-purple-900/30 dark:hover:text-purple-400 dark:hover:border-purple-800/60 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-[10px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-purple-50 hover:text-purple-700 hover:border-purple-200 dark:hover:bg-purple-900/30 dark:hover:text-purple-400 dark:hover:border-purple-800/60 transition-colors"
               >
                 <Edit2 className="w-3.5 h-3.5" /> Configure
               </button>
@@ -204,7 +201,7 @@ export default function RolesManagementPage() {
                     deleteRole.mutate({ id: role.id });
                   }
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-red-50 hover:text-red-700 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:text-red-400 dark:hover:border-red-800/60 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-[10px] font-extrabold uppercase tracking-widest text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-red-50 hover:text-red-700 hover:border-red-200 dark:hover:bg-red-900/30 dark:hover:text-red-400 dark:hover:border-red-800/60 transition-colors"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>

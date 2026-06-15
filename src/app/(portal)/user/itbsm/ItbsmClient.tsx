@@ -5,12 +5,15 @@ import { api } from "~/trpc/react";
 import { Loader2, ChevronDown, ChevronRight, Building2, LayoutGrid, ShieldAlert, User, Pencil, X, Search as SearchIcon, CheckSquare, Square } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 export function ItbsmClient() {
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [expandedDivisions, setExpandedDivisions] = useState<Record<string, boolean>>({});
   const utils = api.useUtils();
+  const { canView, canEdit, isLoading: isPermsLoading } = usePermissions("itbsm");
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -117,18 +120,30 @@ export function ItbsmClient() {
     });
   };
 
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
+
   return (
     <div className="flex flex-col w-full h-[calc(100vh-140px)] relative">
       <div className="flex flex-col h-full bg-white dark:bg-[#151923] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden relative">
         
         {/* Header Title Bar */}
-        <div className="flex items-center px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#11151d]/50">
+        <div className="flex items-center px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#11151d]/50">
           <ShieldAlert className="w-5 h-5 text-purple-600 mr-3" />
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200">ITBSM Directory</h2>
+          <h2 className="text-[13px] font-bold text-slate-800 dark:text-slate-200">ITBSM Directory</h2>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto custom-scrollbar p-6">
+        <div className="flex-1 overflow-auto custom-scrollbar p-4">
           <div className="columns-1 md:columns-2 lg:columns-3 gap-6 w-full">
             {isLoading && (
               <div className="col-span-full flex flex-col items-center justify-center gap-3 py-20">
@@ -162,7 +177,7 @@ export function ItbsmClient() {
                   >
                     {/* Expandable Header */}
                     <div className="flex items-center justify-between p-1 pr-4 bg-slate-50/50 dark:bg-slate-900/20 hover:bg-purple-50/50 dark:hover:bg-purple-900/10 transition-colors cursor-pointer" onClick={() => toggleDivision(divisionName)}>
-                      <div className="flex items-center gap-3 p-3">
+                      <div className="flex items-center gap-3 p-2">
                         <div className={`p-2 rounded-lg transition-colors ${isExpanded ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'}`}>
                           <Building2 className="w-4 h-4" />
                         </div>
@@ -176,13 +191,15 @@ export function ItbsmClient() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <button 
-                          onClick={(e) => openModal(e, divisionName)}
-                          className="p-2 opacity-0 group-hover:opacity-100 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-purple-50 dark:hover:bg-purple-900/30 text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all shadow-sm"
-                          title="Edit ITBSM for Departments"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
+                        {canEdit && (
+                          <button 
+                            onClick={(e) => openModal(e, divisionName)}
+                            className="p-2 opacity-0 group-hover:opacity-100 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-purple-50 dark:hover:bg-purple-900/30 text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all shadow-sm"
+                            title="Edit ITBSM for Departments"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                        )}
                         <div className="p-1 rounded-full text-slate-400">
                           {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                         </div>
@@ -199,12 +216,12 @@ export function ItbsmClient() {
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden border-t border-slate-200 dark:border-slate-800"
                         >
-                          <div className="p-4 bg-slate-50 dark:bg-[#0f1219]">
+                          <div className="p-3 bg-slate-50 dark:bg-[#0f1219]">
                             <div className="flex flex-col gap-3">
                               {departments.map((dept) => (
                                 <div 
                                   key={dept.id} 
-                                  className="flex flex-col p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700/50 transition-colors bg-white dark:bg-[#151923] shadow-sm"
+                                  className="flex flex-col p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-700/50 transition-colors bg-white dark:bg-[#151923] shadow-sm"
                                 >
                                   <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-100 dark:border-slate-800/50">
                                     <LayoutGrid className="w-3.5 h-3.5 text-purple-500" />

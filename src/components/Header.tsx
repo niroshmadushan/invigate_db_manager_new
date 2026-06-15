@@ -60,7 +60,7 @@ export function Header({ session }: { session: any }) {
   const userImage = profile?.image || null;
 
   return (
-    <header className="w-full h-[72px] bg-white dark:bg-[#151923] border-b border-slate-100 dark:border-slate-800/50 flex items-center justify-between px-8 sticky top-0 z-30 transition-colors duration-500">
+    <header className="w-full h-14 bg-white dark:bg-[#151923] border-b border-slate-100 dark:border-slate-800/50 flex items-center justify-between px-8 sticky top-0 z-30 transition-colors duration-500">
       
       {/* Left: System Status & Dynamic Title */}
       <div className="flex items-center">
@@ -99,7 +99,7 @@ export function Header({ session }: { session: any }) {
               window.dispatchEvent(new Event('search-updated'));
             }}
             defaultValue={typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get("q") || "" : ""}
-            className="w-full bg-transparent border-none text-[13px] font-medium px-3 focus:outline-none text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
+            className="w-full bg-transparent border-none text-[12px] font-medium px-3 focus:outline-none text-slate-700 dark:text-slate-200 placeholder:text-slate-400"
           />
         </motion.div>
 
@@ -172,7 +172,7 @@ export function Header({ session }: { session: any }) {
                       <LayoutDashboard className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-[13px] font-bold text-slate-900 dark:text-white leading-tight">Welcome to DB Manager!</p>
+                      <p className="text-[12px] font-bold text-slate-900 dark:text-white leading-tight">Welcome to DB Manager!</p>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">We're glad to have you here. Your setup is complete.</p>
                       <p className="text-[9px] font-bold text-blue-600 mt-1">Just now</p>
                     </div>
@@ -192,7 +192,7 @@ export function Header({ session }: { session: any }) {
           className="flex items-center gap-3 hover:-translate-y-0.5 active:scale-95 transition-all duration-300 group"
         >
           <div className="flex flex-col items-end justify-center">
-            <span className="text-[13px] font-extrabold text-slate-800 dark:text-slate-200 leading-tight tracking-wide group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{firstName}</span>
+            <span className="text-[12px] font-extrabold text-slate-800 dark:text-slate-200 leading-tight tracking-wide group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{firstName}</span>
             <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 leading-tight uppercase tracking-wider">{role}</span>
           </div>
           <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center overflow-hidden text-[16px] font-extrabold text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">

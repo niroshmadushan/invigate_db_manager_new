@@ -6,6 +6,8 @@ import { Loader2, Hash, Users, FolderOpen, Search, ChevronLeft, ChevronRight, Ar
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 export function GroupsClient() {
   const searchParams = useSearchParams();
@@ -13,6 +15,7 @@ export function GroupsClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
   const itemsPerPage = 25;
+  const { canView, isLoading: isPermsLoading } = usePermissions("groups");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -81,6 +84,18 @@ export function GroupsClient() {
 
   const goToNextPage = () => setCurrentPage((p) => Math.min(totalPages, p + 1));
   const goToPrevPage = () => setCurrentPage((p) => Math.max(1, p - 1));
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full relative">

@@ -28,7 +28,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-full p-6 lg:p-10 text-slate-800 dark:text-slate-200">
+    <div className="min-h-full p-4 lg:p-6 text-slate-800 dark:text-slate-200">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Status Panel */}
-          <motion.div variants={itemVariants} className="lg:col-span-1 bg-white dark:bg-[#151923] border border-slate-200 dark:border-white/5 rounded-2xl p-6 shadow-sm relative overflow-hidden group">
+          <motion.div variants={itemVariants} className="lg:col-span-1 bg-white dark:bg-[#151923] border border-slate-200 dark:border-white/5 rounded-2xl p-4 shadow-sm relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-emerald-500/20" />
             
             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
                       <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-[#151923] shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">Database Core</p>
+                      <p className="text-[13px] font-bold text-slate-900 dark:text-white">Database Core</p>
                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-mono tracking-wider">{dashboardData?.status.database}</p>
                     </div>
                   </div>
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
                       <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-[#151923] shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">API Gateway</p>
+                      <p className="text-[13px] font-bold text-slate-900 dark:text-white">API Gateway</p>
                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-mono tracking-wider">{dashboardData?.status.api}</p>
                     </div>
                   </div>
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
           </motion.div>
 
           {/* Role & Permissions Panel */}
-          <motion.div variants={itemVariants} className="lg:col-span-2 bg-white dark:bg-[#151923] border border-slate-200 dark:border-white/5 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
+          <motion.div variants={itemVariants} className="lg:col-span-2 bg-white dark:bg-[#151923] border border-slate-200 dark:border-white/5 rounded-2xl p-4 shadow-sm overflow-hidden relative group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 dark:bg-blue-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
             
             <div className="flex flex-col sm:flex-row gap-8 h-full">
@@ -105,8 +105,8 @@ export default function AdminDashboard() {
                 <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-1">{isLoadingStatus ? "Loading..." : dashboardData?.roleName}</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{isLoadingStatus ? "..." : dashboardData?.roleDesc}</p>
+                <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-1">{isLoadingStatus ? "Loading..." : dashboardData?.roleName}</h2>
+                <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-relaxed">{isLoadingStatus ? "..." : dashboardData?.roleDesc}</p>
                 
                 <div className="mt-6 flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
                   <Key className="w-3.5 h-3.5" />
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-white/5 rounded-xl p-6">
-                    <p className="text-sm text-slate-400 text-center">No explicit custom permissions configured. Operating on default access layer.</p>
+                    <p className="text-[12px] text-slate-400 text-center">No explicit custom permissions configured. Operating on default access layer.</p>
                   </div>
                 )}
               </div>
@@ -146,9 +146,9 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Activity Timeline */}
-        <motion.div variants={itemVariants} className="bg-white dark:bg-[#151923] border border-slate-200 dark:border-white/5 rounded-2xl p-6 shadow-sm">
+        <motion.div variants={itemVariants} className="bg-white dark:bg-[#151923] border border-slate-200 dark:border-white/5 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-[13px] font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <Zap className="w-4 h-4 text-blue-500" />
               Recent System Activity
             </h3>
@@ -177,7 +177,7 @@ export default function AdminDashboard() {
                 ))}
               </div>
             ) : logsData?.items.length === 0 ? (
-              <div className="py-12 text-center text-slate-500 dark:text-slate-400">
+              <div className="py-8 text-center text-slate-500 dark:text-slate-400">
                 <Clock className="w-8 h-8 mx-auto mb-3 opacity-20" />
                 <p>No recent activity detected.</p>
               </div>
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
                     <div className="w-10 h-10 rounded-full bg-white dark:bg-[#151923] border-2 border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 group-hover:border-blue-500 transition-colors">
                       <div className="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600 group-hover:bg-blue-500 transition-colors" />
                     </div>
-                    <div className="bg-slate-50 dark:bg-[#1C1F2E] border border-slate-100 dark:border-white/5 rounded-xl p-4 w-full shadow-sm">
+                    <div className="bg-slate-50 dark:bg-[#1C1F2E] border border-slate-100 dark:border-white/5 rounded-xl p-3 w-full shadow-sm">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold px-2 py-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md">
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
                         </span>
                       </div>
                       {log.details && (
-                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-[12px] text-slate-600 dark:text-slate-400 leading-relaxed">
                           {log.details}
                         </p>
                       )}

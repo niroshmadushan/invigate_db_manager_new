@@ -5,11 +5,14 @@ import { api } from "~/trpc/react";
 import { Loader2, Key, Users, AppWindow, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 export function AppAccessClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [search, setSearch] = useState(searchParams.get("q") || "");
+  const { canView, isLoading: isPermsLoading } = usePermissions("app-access");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -23,6 +26,18 @@ export function AppAccessClient() {
   const { data: allAppGroups, isLoading, isError } = api.appAccess.getAllGrouped.useQuery({ search });
 
   const displayGroups = allAppGroups || [];
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView) {
+    return <PermissionDenied />;
+  }
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-140px)] w-full relative">

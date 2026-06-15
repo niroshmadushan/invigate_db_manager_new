@@ -9,6 +9,43 @@ async function main() {
   // Hash the default password
   const hashedPassword = await bcrypt.hash("Connex@123", 10);
 
+  // 0. Create Default Permission Roles
+  const adminPermissions: any = {};
+  const userPermissions: any = {};
+
+  const SYSTEM_MODULES = [
+    "departments", "applications", "divisions", "mitbs", "itbsm", "cost-center", 
+    "single-user", "groups", "help-desk", "logs-it-service", "reminders", 
+    "cr-resolution", "report", "app-access", "app-tracking"
+  ];
+
+  SYSTEM_MODULES.forEach(m => {
+    adminPermissions[m] = { view: true, edit: true };
+    userPermissions[m] = { view: true, edit: false }; // Users can view everything, but not edit
+  });
+
+  const adminRoleProfile = await prisma.permissionRole.upsert({
+    where: { name: "System Administrator" },
+    update: { permissions: adminPermissions },
+    create: {
+      name: "System Administrator",
+      description: "Full access to all system modules (View and Edit).",
+      permissions: adminPermissions,
+    }
+  });
+
+  const userRoleProfile = await prisma.permissionRole.upsert({
+    where: { name: "Basic User" },
+    update: { permissions: userPermissions },
+    create: {
+      name: "Basic User",
+      description: "Read-only access to most system modules.",
+      permissions: userPermissions,
+    }
+  });
+
+  console.log("Upserted Permission Roles: Admin / Basic User");
+
   // 1. Create/Update Admin Account
   const admin = await prisma.user.upsert({
     where: { email: "admin@connexcodeworks.biz" },
@@ -24,6 +61,7 @@ async function main() {
       role: "ADMIN",
       designation: "System Administrator",
       accessLevel: "FULL_CONTROL",
+      permissionRoleId: adminRoleProfile.id,
     },
   });
   console.log("Upserted Admin:", admin.email);
@@ -42,6 +80,7 @@ async function main() {
       role: "USER",
       designation: "Software Engineer",
       accessLevel: "VIEW_ONLY",
+      permissionRoleId: userRoleProfile.id,
     },
   });
   console.log("Upserted User:", user.email);

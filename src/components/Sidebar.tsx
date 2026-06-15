@@ -75,7 +75,6 @@ export const navStructure: NavGroup[] = [
 export function Sidebar({ role }: { role: string }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
-  const [searchQuery, setSearchQuery] = useState("");
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const pathname = usePathname();
   const { data: profile } = api.user.getProfile.useQuery();
@@ -106,23 +105,7 @@ export function Sidebar({ role }: { role: string }) {
     }).filter(group => group.items.length > 0);
   }, [profile, role]);
 
-  const allLinks = useMemo(() => {
-    const links: NavItem[] = [];
-    if (role === "ADMIN") {
-      links.push({ label: "Admin Dashboard", href: "/admin", icon: LayoutDashboard });
-      links.push({ label: "Personnel Roster", href: "/admin/personnel", icon: Users });
-      links.push({ label: "Role Management", href: "/admin/roles", icon: ShieldCheck });
-    } else {
-      filteredNavStructure.forEach(group => {
-        links.push(...group.items);
-      });
-    }
-    return links;
-  }, [role, filteredNavStructure]);
 
-  const searchResults = searchQuery 
-    ? allLinks.filter(link => link.label.toLowerCase().includes(searchQuery.toLowerCase()))
-    : [];
 
   const toggleGroup = (title: string) => {
     setCollapsedGroups(prev => ({
@@ -134,7 +117,7 @@ export function Sidebar({ role }: { role: string }) {
   return (
     <motion.aside 
       initial={false}
-      animate={{ width: isCollapsed ? 80 : 260 }}
+      animate={{ width: isCollapsed ? 72 : 210 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="flex flex-col bg-white dark:bg-[#151923] relative z-20 flex-shrink-0 overflow-hidden"
     >
@@ -153,7 +136,7 @@ export function Sidebar({ role }: { role: string }) {
                 <Database className="w-3.5 h-3.5 text-white" />
               </div>
               <div className="whitespace-nowrap">
-                <h1 className="font-bold text-slate-900 dark:text-white tracking-wide text-sm leading-tight">DB-Manager</h1>
+                <h1 className="font-bold text-slate-900 dark:text-white tracking-wide text-[13.5px] leading-tight">DB-Manager</h1>
               </div>
             </motion.div>
           )}
@@ -169,82 +152,7 @@ export function Sidebar({ role }: { role: string }) {
         </button>
       </div>
 
-      {/* Search Bar & Smart Suggestions */}
-      <AnimatePresence>
-        {!isCollapsed && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }} 
-            animate={{ opacity: 1, height: "auto" }} 
-            exit={{ opacity: 0, height: 0 }} 
-            className="px-4 mb-4 flex flex-col gap-2"
-          >
-            {/* Fat Flat Search Bar (No Shadows) */}
-            <div className="relative bg-slate-100 dark:bg-slate-800/80 rounded-xl flex items-center transition-all duration-300 border border-transparent focus-within:border-slate-300 dark:focus-within:border-slate-600 h-11">
-              <div className="pl-3.5 flex items-center justify-center text-slate-500">
-                <Search className="w-4 h-4" />
-              </div>
-              
-              <input 
-                suppressHydrationWarning
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Find everything..." 
-                className="w-full bg-transparent border-none text-sm px-2.5 h-full focus:outline-none text-slate-700 dark:text-slate-200 placeholder:text-slate-500 font-medium"
-              />
-              
-              <div className="pr-1.5 flex items-center">
-                <button 
-                  suppressHydrationWarning
-                  onClick={() => setSearchQuery("")}
-                  className="px-2.5 h-8 flex items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors font-bold text-[10px] tracking-wider uppercase"
-                >
-                  {searchQuery ? "Clr" : "Go"}
-                </button>
-              </div>
-            </div>
 
-            {/* Smart Suggesting Buttons OR Search Results */}
-            <div className="flex flex-col gap-1 px-1">
-              {!searchQuery && (
-                <div className="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1">
-                  {(role === "ADMIN" ? ['Terminal', 'Database', 'Admin'] : ['Applications', 'Access', 'Logs']).map(suggest => (
-                    <button key={suggest} suppressHydrationWarning onClick={() => setSearchQuery(suggest)} className="px-2.5 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-bold text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
-                      {suggest}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {searchQuery && searchResults.length > 0 && (
-                <div className="flex flex-col gap-1 mt-1 max-h-48 overflow-y-auto custom-scrollbar pr-1">
-                  {searchResults.map((result, idx) => {
-                    const Icon = result.icon;
-                    return (
-                      <Link 
-                        key={idx} 
-                        href={result.href}
-                        onClick={() => setSearchQuery("")}
-                        className="flex items-center gap-2 px-3 py-2 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/40 border border-purple-100 dark:border-purple-800/50 rounded-xl transition-colors"
-                      >
-                        <div className="w-5 h-5 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                          <Icon className="w-3.5 h-3.5" />
-                        </div>
-                        <span className="text-[12px] font-bold text-purple-900 dark:text-purple-300">{result.label}</span>
-                      </Link>
-                    )
-                  })}
-                </div>
-              )}
-              {searchQuery && searchResults.length === 0 && (
-                <div className="text-center py-4 text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                  No matches found.
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Menu Items */}
       <nav id="tour-sidebar-nav" className={`flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar py-2 px-4 transition-all duration-300 ${isCollapsed ? 'space-y-2' : 'space-y-6'}`}>
@@ -254,7 +162,7 @@ export function Sidebar({ role }: { role: string }) {
           <div className="space-y-1 mt-2">
             {role === "ADMIN" && (
               <>
-                <Link href="/admin" title="Admin Dashboard" className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-all ${pathname === '/admin' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                <Link href="/admin" title="Admin Dashboard" className={`group flex items-center gap-3 px-3 py-1.5 rounded-xl font-bold text-[12px] transition-all ${pathname === '/admin' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
                   <div className={`flex-shrink-0 w-6 h-6 rounded flex items-center justify-center transition-transform ${pathname === '/admin' ? 'text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'}`}>
                     <LayoutDashboard className="w-4 h-4" />
                   </div>
@@ -263,21 +171,21 @@ export function Sidebar({ role }: { role: string }) {
                   </AnimatePresence>
                 </Link>
 
-                <Link href="/admin/personnel" title="Personnel Roster" className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-all ${pathname === '/admin/personnel' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                <Link href="/admin/personnel" title="Personnel" className={`group flex items-center gap-3 px-3 py-1.5 rounded-xl font-bold text-[12px] transition-all ${pathname === '/admin/personnel' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
                   <div className={`flex-shrink-0 w-6 h-6 rounded flex items-center justify-center transition-transform ${pathname === '/admin/personnel' ? 'text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'}`}>
                     <Users className="w-4 h-4" />
                   </div>
                   <AnimatePresence>
-                    {!isCollapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="whitespace-nowrap">Personnel Roster</motion.span>}
+                    {!isCollapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="whitespace-nowrap">Personnel</motion.span>}
                   </AnimatePresence>
                 </Link>
 
-                <Link href="/admin/roles" title="Role Management" className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-all ${pathname === '/admin/roles' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                <Link href="/admin/roles" title="Roles" className={`group flex items-center gap-3 px-3 py-1.5 rounded-xl font-bold text-[12px] transition-all ${pathname === '/admin/roles' ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
                   <div className={`flex-shrink-0 w-6 h-6 rounded flex items-center justify-center transition-transform ${pathname === '/admin/roles' ? 'text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'}`}>
                     <ShieldCheck className="w-4 h-4" />
                   </div>
                   <AnimatePresence>
-                    {!isCollapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="whitespace-nowrap">Role Management</motion.span>}
+                    {!isCollapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="whitespace-nowrap">Roles</motion.span>}
                   </AnimatePresence>
                 </Link>
               </>
@@ -296,9 +204,9 @@ export function Sidebar({ role }: { role: string }) {
                   <motion.button 
                     onClick={() => toggleGroup(group.title)}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-                    className="w-full flex items-center justify-between px-2 mt-6 mb-3 group/header"
+                    className="w-full flex items-center justify-between px-2 mt-4 mb-2 group/header"
                   >
-                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 group-hover/header:text-slate-600 dark:group-hover/header:text-slate-300 uppercase tracking-widest transition-colors">
+                    <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 group-hover/header:text-slate-600 dark:group-hover/header:text-slate-300 uppercase tracking-widest transition-colors">
                       {group.title}
                     </span>
                     <motion.div 
@@ -331,7 +239,7 @@ export function Sidebar({ role }: { role: string }) {
                           key={i} 
                           href={item.href} 
                           title={item.label}
-                          className={`group flex items-center gap-3 px-3 py-2 rounded-xl font-medium text-[13px] transition-all relative ${isActive ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                          className={`group flex items-center gap-3 px-3 py-1.5 rounded-xl font-medium text-[12px] transition-all relative ${isActive ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                         >
                           <div className={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded transition-colors ${isActive ? 'text-purple-700 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300'}`}>
                             <Icon className="w-4 h-4" />
@@ -363,9 +271,9 @@ export function Sidebar({ role }: { role: string }) {
       </nav>
 
       {/* Footer Area */}
-      <div className="p-4 shrink-0 flex flex-col gap-3">
+      <div className="p-3 shrink-0 flex flex-col gap-3">
         {/* Development Info Box (Purple Gradient like Image) */}
-        <div className={`flex flex-col p-4 rounded-2xl bg-gradient-to-br from-[#9333ea] to-[#4f46e5] text-white relative overflow-hidden transition-all duration-300 ${isCollapsed ? 'items-center justify-center p-2 aspect-square' : ''}`}>
+        <div className={`flex flex-col p-3 rounded-2xl bg-gradient-to-br from-[#9333ea] to-[#4f46e5] text-white relative overflow-hidden transition-all duration-300 ${isCollapsed ? 'items-center justify-center p-2 aspect-square' : ''}`}>
           
           {/* Abstract background shapes */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>

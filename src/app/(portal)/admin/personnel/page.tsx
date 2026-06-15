@@ -134,8 +134,8 @@ function PersonnelRosterContent() {
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-slate-800 dark:text-white tracking-tight">Personnel Roster</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-medium tracking-wide">Manage system roles and access privileges</p>
+            <h1 className="text-lg font-bold text-slate-800 dark:text-white tracking-tight">Personnel Roster</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-[11px] mt-0.5 font-medium tracking-wide">Manage system roles and access privileges</p>
           </div>
         </div>
         <motion.button 
@@ -151,20 +151,20 @@ function PersonnelRosterContent() {
       </header>
 
       {searchQuery && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-slate-500 dark:text-slate-400 shrink-0">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[12px] text-slate-500 dark:text-slate-400 shrink-0">
           Showing search results for: <strong className="text-slate-500">{searchQuery}</strong>
         </motion.div>
       )}
 
       <div className="bg-white dark:bg-[#151923] shadow-sm border-slate-100 dark:border-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm flex-1 flex flex-col min-h-0">
         <div className="overflow-auto flex-1 custom-scrollbar">
-          <table className="w-full text-left text-sm text-slate-700 dark:text-slate-300 relative">
+          <table className="w-full text-left text-[12px] text-slate-700 dark:text-slate-300 relative">
             <thead className="text-[10px] uppercase bg-slate-50 dark:bg-[#0B0F19] text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800 sticky top-0 z-10 backdrop-blur-sm">
               <tr>
-                <th className="px-6 py-4 font-bold tracking-wider">Personnel</th>
-                <th className="px-6 py-4 font-bold tracking-wider">Designation</th>
-                <th className="px-6 py-4 font-bold tracking-wider">System Role</th>
-                <th className="px-6 py-4 font-bold tracking-wider text-right">Actions</th>
+                <th className="px-4 py-3 font-bold tracking-wider">Personnel</th>
+                <th className="px-4 py-3 font-bold tracking-wider">Designation</th>
+                <th className="px-4 py-3 font-bold tracking-wider">System Role</th>
+                <th className="px-4 py-3 font-bold tracking-wider text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-white/[0.02]">
@@ -183,12 +183,12 @@ function PersonnelRosterContent() {
                   key={u.id} 
                   className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors group"
                 >
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3">
                     <div className="font-semibold text-slate-900 dark:text-white">{u.name || "N/A"}</div>
                     <div className="text-[11px] text-slate-500">{u.email}</div>
                   </td>
-                  <td className="px-6 py-4 text-xs font-medium text-slate-600 dark:text-slate-400">{u.designation || "N/A"}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3 text-xs font-medium text-slate-600 dark:text-slate-400">{u.designation || "N/A"}</td>
+                  <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-md text-[10px] font-extrabold tracking-wide ${u.role === "ADMIN" ? 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border border-zinc-500/20' : 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20'}`}>
                       {u.role}
                     </span>
@@ -198,7 +198,7 @@ function PersonnelRosterContent() {
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 text-right space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <td className="px-4 py-3 text-right space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => openEditModal(u)} className="text-[10px] font-bold border border-slate-200 dark:border-white/10 hover:border-slate-500 hover:text-slate-600 dark:hover:text-slate-400 px-3 py-1.5 rounded-lg transition-all bg-white dark:bg-transparent">
                       EDIT
                     </button>

@@ -5,6 +5,8 @@ import { api } from "~/trpc/react";
 import { Loader2, Hash, User, Mail, AtSign, Search, ChevronLeft, ChevronRight, ArrowUpDown, ChevronUp, ChevronDown, ArrowLeft, CheckCircle2, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams, useRouter } from "next/navigation";
+import { usePermissions } from "~/hooks/usePermissions";
+import { PermissionDenied } from "~/components/PermissionDenied";
 
 export function AddGroupUsersClient({ groupId }: { groupId: number }) {
   const router = useRouter();
@@ -15,6 +17,7 @@ export function AddGroupUsersClient({ groupId }: { groupId: number }) {
   const [selectedUserIds, setSelectedUserIds] = useState<Set<number>>(new Set());
   const [isConfirmingAdd, setIsConfirmingAdd] = useState(false);
   const itemsPerPage = 25;
+  const { canView, canEdit, isLoading: isPermsLoading } = usePermissions("groups");
 
   useEffect(() => {
     const handleSearchUpdate = () => {
@@ -104,6 +107,18 @@ export function AddGroupUsersClient({ groupId }: { groupId: number }) {
 
   const goToNextPage = () => setCurrentPage((p) => Math.min(totalPages, p + 1));
   const goToPrevPage = () => setCurrentPage((p) => Math.max(1, p - 1));
+
+  if (isPermsLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-140px)] w-full">
+        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!canView || !canEdit) {
+    return <PermissionDenied />;
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full relative">

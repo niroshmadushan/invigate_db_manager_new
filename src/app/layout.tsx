@@ -7,9 +7,9 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { GlobalToaster } from "~/components/GlobalToaster";
 
 export const metadata: Metadata = {
-  title: "DB Manager | Elite Portal",
+  title: "DB Manager",
   description: "Database control system for Sri Lankan Airlines",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/icon.png" }],
 };
 
 const inter = Inter({

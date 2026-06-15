@@ -95,7 +95,9 @@ Once the runner is active, any `git push` to the `main` branch will trigger `.gi
 2. **Backup:** If the build is successful, everything in `current` is zipped and moved to `released/v_YYYYMMDD_HHMMSS`.
 3. **Deploy:** The `current` directory is cleared, and the newly built code from `test` is copied into `current`.
 4. **Clean up:** The `test` directory is wiped clean.
-5. **Restart:** The workflow runs `npx prisma db push` and `pm2 restart db-manager`.
+5. **Restart:** The workflow runs `pm2 restart db-manager`.
+
+*Note: Database migrations (`npx prisma db push` and `npx prisma db seed`) are NOT run automatically by this workflow to prevent accidental data loss. If you change your Prisma schema, you must SSH into your server and run `npx prisma db push` manually in the `current` folder.*
 
 *Note: If the build process in the `test` folder fails, the workflow immediately aborts, leaving the active `current` folder completely untouched to prevent downtime.*
 

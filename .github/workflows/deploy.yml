@@ -72,8 +72,7 @@ jobs:
     - name: Restart PM2 Process
       working-directory: ~/db-manager/current
       run: |
-        # Apply database migrations
-        npx prisma db push --accept-data-loss || echo "Prisma push encountered a warning"
+        # Note: Database migrations (npx prisma db push) should be run manually if the schema changes.
         
         # Check if pm2 process exists
         if pm2 show db-manager > /dev/null; then

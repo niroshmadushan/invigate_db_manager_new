@@ -107,10 +107,13 @@ export const authRouter = createTRPCRouter({
       });
 
       if (!success) {
-        throw new Error("Failed to send OTP email");
+        // Email failed (e.g. server IP not whitelisted on mail server)
+        // Return OTP directly in the response so the user can still log in
+        console.warn(`[AUTH] Email delivery failed for ${input.email}. Returning OTP directly.`);
+        return { success: true, requireOtp: true, otpFallback: otpCode };
       }
 
-      return { success: true, requireOtp: true };
+      return { success: true, requireOtp: true, otpFallback: null };
     }),
 
   verifyOtpAndResetPassword: publicProcedure

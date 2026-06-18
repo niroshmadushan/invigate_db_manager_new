@@ -12,14 +12,14 @@ import {
 const SYSTEM_MODULES = [
   { id: "departments", name: "Departments", group: "Sri Lankan Catering" },
   
-  { id: "applications", name: "Applications", group: "Organizational" },
-  { id: "divisions", name: "Divisions", group: "Organizational" },
-  { id: "mitbs", name: "MITBS", group: "Organizational" },
-  { id: "itbsm", name: "ITBSM", group: "Organizational" },
-  { id: "cost-center", name: "Cost Center", group: "Organizational" },
-  { id: "single-user", name: "Single User", group: "Organizational" },
-  { id: "groups", name: "Groups", group: "Organizational" },
-  { id: "help-desk", name: "Help Desk", group: "Organizational" },
+  { id: "applications", name: "Applications", group: "SriLankan Airlines" },
+  { id: "divisions", name: "Divisions", group: "SriLankan Airlines" },
+  { id: "mitbs", name: "MITBS", group: "SriLankan Airlines" },
+  { id: "itbsm", name: "ITBSM", group: "SriLankan Airlines" },
+  { id: "cost-center", name: "Cost Center", group: "SriLankan Airlines" },
+  { id: "single-user", name: "Single User", group: "SriLankan Airlines" },
+  { id: "groups", name: "Groups", group: "SriLankan Airlines" },
+  { id: "help-desk", name: "Help Desk", group: "SriLankan Airlines" },
   
   { id: "logs-it-service", name: "Logs - (IT-Service)", group: "IT services Catalogue" },
   { id: "reminders", name: "Reminders", group: "IT services Catalogue" },

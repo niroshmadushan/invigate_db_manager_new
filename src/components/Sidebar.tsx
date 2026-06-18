@@ -37,7 +37,7 @@ export const navStructure: NavGroup[] = [
     ]
   },
   {
-    title: "Organizational",
+    title: "SriLankan Airlines",
     items: [
       { label: "Applications", href: "/user/applications", icon: AppWindow },
       { label: "Divisions", href: "/user/divisions", icon: Network },

@@ -47,6 +47,7 @@ export const navStructure: NavGroup[] = [
       { label: "Single User", href: "/user/single-user", icon: User },
       { label: "Groups", href: "/user/groups", icon: UsersRound },
       { label: "Help Desk", href: "/user/help-desk", icon: Headset },
+      { label: "Report", href: "/user/report", icon: BarChart3 },
     ]
   },
   {
@@ -57,10 +58,9 @@ export const navStructure: NavGroup[] = [
     ]
   },
   {
-    title: "CHNAGE REQUEST",
+    title: "CHANGE REQUEST",
     items: [
       { label: "CR Resolution", href: "/user/cr-resolution", icon: Workflow },
-      { label: "Report", href: "/user/report", icon: BarChart3 },
     ]
   },
   {

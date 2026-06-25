@@ -24,8 +24,8 @@ const SYSTEM_MODULES = [
   { id: "logs-it-service", name: "Logs - (IT-Service)", group: "IT services Catalogue" },
   { id: "reminders", name: "Reminders", group: "IT services Catalogue" },
 
-  { id: "cr-resolution", name: "CR Resolution", group: "CHNAGE REQUEST" },
-  { id: "report", name: "Report", group: "CHNAGE REQUEST" },
+  { id: "cr-resolution", name: "CR Resolution", group: "CHANGE REQUEST" },
+  { id: "report", name: "Report", group: "CHANGE REQUEST" },
 
   { id: "app-access", name: "App Access", group: "Tracking Console" },
   { id: "app-tracking", name: "App Tracking", group: "Tracking Console" },

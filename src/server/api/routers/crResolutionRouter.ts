@@ -6,7 +6,11 @@ import type { RowDataPacket } from "mysql2";
 
 export const crResolutionRouter = createTRPCRouter({
   getAll: protectedProcedure
-    .input(z.object({ search: z.string().optional() }))
+    .input(z.object({ 
+      search: z.string().optional(),
+      resl: z.number().optional(),
+      status: z.number().optional()
+    }))
     .query(async ({ input }) => {
       try {
         let query = `
@@ -26,17 +30,27 @@ export const crResolutionRouter = createTRPCRouter({
           FROM cr_sla
         `;
         
+        const whereClauses: string[] = [];
         const params: any[] = [];
         
         if (input.search && input.search.trim() !== "") {
           const searchTerm = `%${input.search}%`;
-          query += `
-            WHERE 
-              team LIKE ? OR
-              CAST(task_id AS CHAR) LIKE ? OR
-              CAST(main_cr AS CHAR) LIKE ?
-          `;
+          whereClauses.push(`(team LIKE ? OR CAST(task_id AS CHAR) LIKE ? OR CAST(main_cr AS CHAR) LIKE ?)`);
           params.push(searchTerm, searchTerm, searchTerm);
+        }
+
+        if (input.resl !== undefined && input.resl !== null) {
+          whereClauses.push(`resl = ?`);
+          params.push(input.resl);
+        }
+
+        if (input.status !== undefined && input.status !== null) {
+          whereClauses.push(`status = ?`);
+          params.push(input.status);
+        }
+
+        if (whereClauses.length > 0) {
+          query += ` WHERE ` + whereClauses.join(" AND ");
         }
 
         query += " ORDER BY id DESC";

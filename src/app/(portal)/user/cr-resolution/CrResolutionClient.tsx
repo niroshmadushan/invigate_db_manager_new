@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { usePermissions } from "~/hooks/usePermissions";
 import { PermissionDenied } from "~/components/PermissionDenied";
 
-type SortColumn = "id" | "team" | "created_date" | "task_id" | "main_cr" | "resl" | "type";
+type SortColumn = "id" | "team" | "created_date" | "task_id" | "main_cr" | "resl" | "type" | "status";
 type SortDirection = "asc" | "desc";
 
 export function CrResolutionClient() {
@@ -20,6 +20,9 @@ export function CrResolutionClient() {
   const rowsPerPage = 20;
   const { canView, isLoading: isPermsLoading } = usePermissions("cr-resolution");
 
+  const [reslFilter, setReslFilter] = useState<number | undefined>(undefined);
+  const [statusFilter, setStatusFilter] = useState<number | undefined>(undefined);
+
   useEffect(() => {
     const handleSearchUpdate = () => {
       const params = new URLSearchParams(window.location.search);
@@ -30,7 +33,11 @@ export function CrResolutionClient() {
     return () => window.removeEventListener('search-updated', handleSearchUpdate);
   }, []);
 
-  const { data: allCr, isLoading, isError } = api.crResolution.getAll.useQuery({ search });
+  const { data: allCr, isLoading, isError } = api.crResolution.getAll.useQuery({ 
+    search,
+    resl: reslFilter,
+    status: statusFilter
+  });
 
   const handleSort = (column: SortColumn) => {
     if (sortColumn === column) {
@@ -145,10 +152,72 @@ export function CrResolutionClient() {
     }
   };
 
+  const renderStatusBadge = (status: number) => {
+    switch (status) {
+      case 0:
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-800/50 text-[11px] font-bold tracking-wider">
+            <Clock className="w-3 h-3" />
+            Pending
+          </span>
+        );
+      case 1:
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 text-[11px] font-bold tracking-wider">
+            <CheckCircle2 className="w-3 h-3" />
+            Closed
+          </span>
+        );
+      case 2:
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50 text-[11px] font-bold tracking-wider">
+            <XCircle className="w-3 h-3" />
+            Cancel
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50 text-[11px] font-bold tracking-wider">
+            <Hash className="w-3 h-3" />
+            Unknown ({status})
+          </span>
+        );
+    }
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full relative">
       <div className="flex flex-col h-full bg-white dark:bg-[#151923] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm shadow-slate-200/50 dark:shadow-none relative">
         
+        {/* Filters Area */}
+        <div className="flex items-center gap-4 px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#11151d]/50">
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Resolution:</label>
+            <select 
+              value={reslFilter === undefined ? "" : reslFilter}
+              onChange={(e) => { setReslFilter(e.target.value === "" ? undefined : Number(e.target.value)); setPage(1); }}
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-purple-500 text-slate-700 dark:text-slate-300"
+            >
+              <option value="">All</option>
+              <option value="1">Correct</option>
+              <option value="2">Expired</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Status:</label>
+            <select 
+              value={statusFilter === undefined ? "" : statusFilter}
+              onChange={(e) => { setStatusFilter(e.target.value === "" ? undefined : Number(e.target.value)); setPage(1); }}
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-purple-500 text-slate-700 dark:text-slate-300"
+            >
+              <option value="">All</option>
+              <option value="0">Pending</option>
+              <option value="1">Closed</option>
+              <option value="2">Cancel</option>
+            </select>
+          </div>
+        </div>
+
         {/* Table Area */}
         <div className="flex-1 overflow-auto custom-scrollbar relative">
           <table className="w-full text-left text-sm text-slate-500 dark:text-slate-400">
@@ -173,6 +242,13 @@ export function CrResolutionClient() {
                     <AppWindow className="w-3.5 h-3.5 text-slate-400" />
                     Type
                     <SortIcon column="type" />
+                  </button>
+                </th>
+                <th scope="col" className="px-6 py-3.5 font-extrabold tracking-wider w-32">
+                  <button onClick={() => handleSort("status")} className="flex items-center gap-2 group hover:text-purple-600 dark:hover:text-purple-400 transition-colors focus:outline-none">
+                    <Activity className="w-3.5 h-3.5 text-slate-400" />
+                    Status
+                    <SortIcon column="status" />
                   </button>
                 </th>
                 <th scope="col" className="px-6 py-3.5 font-extrabold tracking-wider">
@@ -201,7 +277,7 @@ export function CrResolutionClient() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {isLoading && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
+                  <td colSpan={7} className="px-6 py-20 text-center">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <Loader2 className="h-6 w-6 text-purple-500 animate-spin" />
                       <p className="text-slate-500 dark:text-slate-400 font-medium text-xs">Fetching CR SLA details...</p>
@@ -211,14 +287,14 @@ export function CrResolutionClient() {
               )}
               {isError && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
+                  <td colSpan={7} className="px-6 py-20 text-center">
                     <p className="text-red-500 font-medium text-sm">Failed to load CR SLA data.</p>
                   </td>
                 </tr>
               )}
               {!isLoading && !isError && currentData.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
+                  <td colSpan={7} className="px-6 py-20 text-center">
                     <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">No records found.</p>
                   </td>
                 </tr>
@@ -243,6 +319,9 @@ export function CrResolutionClient() {
                     </td>
                     <td className="px-6 py-5 pt-5">
                       {renderTypeBadge(cr.type)}
+                    </td>
+                    <td className="px-6 py-5 pt-5">
+                      {renderStatusBadge(cr.status)}
                     </td>
                     <td className="px-6 py-5 pt-5">
                       <div className="flex flex-col gap-1">

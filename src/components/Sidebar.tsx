@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   LayoutDashboard, Users, Shield, Settings, FileText, Activity, LogOut, ChevronLeft,
   AppWindow, Network, Briefcase, ServerCog, Receipt, User, UsersRound, Building2,
   Headset, ScrollText, TerminalSquare, BellRing, Workflow, BarChart3, Key, LocateFixed, Code, Search, ChevronDown, Database, ShieldCheck, LayoutGrid, ClipboardList, Plane
@@ -57,7 +57,7 @@ export const navStructure: NavGroup[] = [
     ]
   },
   {
-    title: "Clearing Request",
+    title: "CHNAGE REQUEST",
     items: [
       { label: "CR Resolution", href: "/user/cr-resolution", icon: Workflow },
       { label: "Report", href: "/user/report", icon: BarChart3 },
@@ -85,14 +85,14 @@ export function Sidebar({ role }: { role: string }) {
     // but the system is designed to allow assigning roles to anyone. Let's strictly enforce Permission Roles for Users.
     // Actually, Admin overrides usually see everything, but let's apply the role if it exists.
     if (!profile?.permissionRole && role === "ADMIN") return navStructure;
-    
+
     if (!profile?.permissionRole) {
       // If no permission role is assigned, block access to everything as a fail-safe
       return [];
     }
 
     const perms = profile.permissionRole.permissions as Record<string, { view: boolean, edit: boolean }>;
-    
+
     return navStructure.map(group => {
       // Extract the ID from the href (e.g. "/user/applications" -> "applications")
       const filteredItems = group.items.filter(item => {
@@ -115,7 +115,7 @@ export function Sidebar({ role }: { role: string }) {
   };
 
   return (
-    <motion.aside 
+    <motion.aside
       initial={false}
       animate={{ width: isCollapsed ? 72 : 210 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -125,7 +125,7 @@ export function Sidebar({ role }: { role: string }) {
       <div className="h-14 px-6 flex items-center justify-between relative shrink-0">
         <AnimatePresence mode="popLayout">
           {!isCollapsed && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -141,7 +141,7 @@ export function Sidebar({ role }: { role: string }) {
             </motion.div>
           )}
         </AnimatePresence>
-        <button 
+        <button
           suppressHydrationWarning
           onClick={() => setIsCollapsed(!isCollapsed)}
           className={`w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all z-10 ${isCollapsed ? 'mx-auto' : 'ml-auto'}`}
@@ -156,7 +156,7 @@ export function Sidebar({ role }: { role: string }) {
 
       {/* Menu Items */}
       <nav id="tour-sidebar-nav" className={`flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar py-2 px-4 transition-all duration-300 ${isCollapsed ? 'space-y-2' : 'space-y-6'}`}>
-        
+
         {/* Core Segment */}
         <div>
           <div className="space-y-1 mt-2">
@@ -196,12 +196,12 @@ export function Sidebar({ role }: { role: string }) {
         {/* Dynamic Groups (Only for non-ADMIN users) */}
         {role !== "ADMIN" && filteredNavStructure.map((group, idx) => {
           const isZipped = collapsedGroups[group.title];
-          
+
           return (
             <div key={idx} className="relative">
               <AnimatePresence>
                 {!isCollapsed ? (
-                  <motion.button 
+                  <motion.button
                     onClick={() => toggleGroup(group.title)}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
                     className="w-full flex items-center justify-between px-2 mt-4 mb-2 group/header"
@@ -209,8 +209,8 @@ export function Sidebar({ role }: { role: string }) {
                     <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 group-hover/header:text-slate-600 dark:group-hover/header:text-slate-300 uppercase tracking-widest transition-colors">
                       {group.title}
                     </span>
-                    <motion.div 
-                      animate={{ rotate: isZipped ? -90 : 0 }} 
+                    <motion.div
+                      animate={{ rotate: isZipped ? -90 : 0 }}
                       transition={{ duration: 0.2 }}
                       className="text-slate-400 dark:text-slate-500 group-hover/header:text-slate-600 dark:group-hover/header:text-slate-300"
                     >
@@ -221,10 +221,10 @@ export function Sidebar({ role }: { role: string }) {
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-px w-8 mx-auto bg-slate-200 dark:bg-slate-700/50 my-2" />
                 )}
               </AnimatePresence>
-              
+
               <AnimatePresence initial={false}>
                 {(!isZipped || isCollapsed) && (
-                  <motion.div 
+                  <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -235,9 +235,9 @@ export function Sidebar({ role }: { role: string }) {
                       const Icon = item.icon;
                       const isActive = pathname === item.href;
                       return (
-                        <Link 
-                          key={i} 
-                          href={item.href} 
+                        <Link
+                          key={i}
+                          href={item.href}
                           title={item.label}
                           className={`group flex items-center gap-3 px-3 py-1.5 rounded-xl font-medium text-[12px] transition-all relative ${isActive ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
                         >
@@ -251,7 +251,7 @@ export function Sidebar({ role }: { role: string }) {
                               </motion.span>
                             )}
                           </AnimatePresence>
-                          
+
                           {/* Floating Tooltip for collapsed state */}
                           {isCollapsed && (
                             <div className="absolute left-16 px-3 py-1.5 bg-blue-600 text-white text-[11px] font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-50">
@@ -274,7 +274,7 @@ export function Sidebar({ role }: { role: string }) {
       <div className="p-3 shrink-0 flex flex-col gap-3">
         {/* Development Info Box (Purple Gradient like Image) */}
         <div className={`flex flex-col p-3 rounded-2xl bg-gradient-to-br from-[#9333ea] to-[#4f46e5] text-white relative overflow-hidden transition-all duration-300 ${isCollapsed ? 'items-center justify-center p-2 aspect-square' : ''}`}>
-          
+
           {/* Abstract background shapes */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full blur-xl -ml-10 -mb-10 pointer-events-none"></div>
@@ -283,7 +283,7 @@ export function Sidebar({ role }: { role: string }) {
             <div className={`flex-shrink-0 flex items-center justify-center rounded-xl bg-white/20 backdrop-blur-md ${isCollapsed ? 'w-10 h-10' : 'w-8 h-8'}`}>
               <Plane className="w-4 h-4 text-white" />
             </div>
-            
+
             {!isCollapsed && (
               <div className="flex-1 overflow-hidden">
                 <p className="text-[11px] font-bold whitespace-nowrap">SriLankan Airlines</p>
@@ -291,7 +291,7 @@ export function Sidebar({ role }: { role: string }) {
               </div>
             )}
           </div>
-          
+
           <AnimatePresence>
             {!isCollapsed && (
               <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="relative z-10 overflow-hidden">
@@ -320,7 +320,7 @@ export function Sidebar({ role }: { role: string }) {
       <AnimatePresence>
         {showSignOutModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center font-sans">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 bg-slate-900/40 dark:bg-[#0C0C0E]/80 backdrop-blur-sm"
               onClick={() => setShowSignOutModal(false)}
@@ -332,29 +332,29 @@ export function Sidebar({ role }: { role: string }) {
               className="relative w-full max-w-sm bg-white dark:bg-[#151518] border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-2xl flex flex-col items-center text-center overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
-              
+
               <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 flex items-center justify-center mb-4 relative">
-                <motion.div 
-                  animate={{ rotate: 360 }} 
+                <motion.div
+                  animate={{ rotate: 360 }}
                   transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 border-t border-r border-red-500/50 rounded-full" 
+                  className="absolute inset-0 border-t border-r border-red-500/50 rounded-full"
                 />
                 <LogOut className="w-8 h-8 text-red-600 dark:text-red-500" />
               </div>
-              
+
               <h2 className="text-xl font-black text-slate-900 dark:text-white mb-2 uppercase tracking-[0.1em]">System Sign Out</h2>
               <p className="text-[12px] text-slate-600 dark:text-slate-400 mb-6 px-4 leading-relaxed font-medium">
                 Are you sure you want to terminate your current session? You will need to re-authenticate to access the portal.
               </p>
-              
+
               <div className="flex items-center w-full gap-3">
-                <button 
+                <button
                   onClick={() => setShowSignOutModal(false)}
                   className="flex-1 py-3 px-4 rounded-xl font-bold text-[11px] tracking-widest uppercase bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-[#202025] dark:border dark:border-white/5 dark:text-slate-300 dark:hover:bg-[#25252A] dark:hover:text-white transition-colors"
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   onClick={() => signOut({ callbackUrl: '/login' })}
                   className="flex-1 py-3 px-4 rounded-xl font-bold text-[11px] tracking-widest uppercase bg-red-600/90 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)] hover:shadow-[0_0_20px_rgba(220,38,38,0.5)] transition-all"
                 >

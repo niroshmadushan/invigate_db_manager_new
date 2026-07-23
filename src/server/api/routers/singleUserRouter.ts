@@ -126,4 +126,20 @@ export const singleUserRouter = createTRPCRouter({
         });
       }
     }),
+
+  updateRoleAssignment: protectedProcedure
+    .input(z.object({ roleId: z.number(), newUserId: z.number() }))
+    .mutation(async ({ input }) => {
+      try {
+        const query = `UPDATE user_roles SET user_id = ? WHERE id = ?`;
+        await dbSla.query(query, [input.newUserId, input.roleId]);
+        return { success: true };
+      } catch (error) {
+        console.error("Error updating role assignment:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update role assignment",
+        });
+      }
+    }),
 });

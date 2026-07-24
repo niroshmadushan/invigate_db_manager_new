@@ -17,8 +17,8 @@ jobs:
           # 2. Pull the latest code using the GitHub Action's built-in token
           git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git deploy
           
-          # 3. Install any new dependencies
-          npm install
+          # 3. Install any new dependencies ignoring peer conflicts
+          npm install --legacy-peer-deps
           
           # 4. Build the Next.js app
           npm run build

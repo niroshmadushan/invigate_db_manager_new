@@ -1,86 +1,27 @@
-name: Deploy to Production (Ubuntu)
+name: Deploy to Ubuntu Server
 
 on:
   push:
     branches:
-      - main
+      - deploy # Triggers only when code is pushed to the deploy branch
 
 jobs:
   deploy:
     runs-on: self-hosted
-    
     steps:
-    - name: Ensure Base Directories Exist
-      run: |
-        mkdir -p ~/db-manager/test
-        mkdir -p ~/db-manager/current
-        mkdir -p ~/db-manager/released
-
-    - name: Checkout Code to Test Folder
-      uses: actions/checkout@v4
-      with:
-        path: test-repo
-
-    - name: Prepare Test Folder
-      run: |
-        # Rsync the newly checked out code to our persistent 'test' folder
-        # We use a separate 'test' folder so it is completely isolated
-        rsync -a --delete test-repo/ ~/db-manager/test/
-        
-        # If there's an .env file in the current folder, copy it over so tests can run
-        if [ -f ~/db-manager/current/.env ]; then
-          cp ~/db-manager/current/.env ~/db-manager/test/.env
-        fi
-
-    - name: Install Node Modules & Build in Test
-      working-directory: ~/db-manager/test
-      run: |
-        npm install
-        # Generate Prisma Client 
-        npx prisma generate
-        # Build the Next.js app
-        npm run build
-
-    - name: Backup Current Release
-      run: |
-        # Check if the current folder has contents
-        if [ "$(ls -A ~/db-manager/current)" ]; then
-          VERSION=$(date +'%Y%m%d_%H%M%S')
-          echo "Backing up current release to released/v_$VERSION"
-          mkdir -p ~/db-manager/released/v_$VERSION
-          cp -r ~/db-manager/current/* ~/db-manager/released/v_$VERSION/
-          cp -r ~/db-manager/current/.[!.]* ~/db-manager/released/v_$VERSION/ || true
-        else
-          echo "Current directory is empty, no backup needed."
-        fi
-
-    - name: Deploy to Current
-      run: |
-        # Clean current directory
-        rm -rf ~/db-manager/current/*
-        rm -rf ~/db-manager/current/.[!.]* || true
-        
-        # Move successfully built app from test to current
-        cp -r ~/db-manager/test/* ~/db-manager/current/
-        cp -r ~/db-manager/test/.[!.]* ~/db-manager/current/ || true
-
-        # Clean test directory to save space
-        rm -rf ~/db-manager/test/*
-        rm -rf ~/db-manager/test/.[!.]* || true
-        rm -rf test-repo
-
-    - name: Restart PM2 Process
-      working-directory: ~/db-manager/current
-      run: |
-        # Note: Database migrations (npx prisma db push) should be run manually if the schema changes.
-        
-        # Check if pm2 process exists
-        if pm2 show db-manager > /dev/null; then
-          pm2 restart db-manager
-        else
-          # Start for the first time
-          pm2 start npm --name "db-manager" -- run start
-        fi
-        
-        # Save pm2 list so it restarts on system reboot
-        pm2 save
+      - name: Execute deployment commands
+        run: |
+          # 1. Navigate to your project folder
+          cd /var/www/html/dbmanager_app
+          
+          # 2. Pull the latest code from GitHub
+          git pull origin deploy
+          
+          # 3. Install any new dependencies
+          npm install
+          
+          # 4. Build the Next.js app
+          npm run build
+          
+          # 5. Restart the PM2 process
+          pm2 restart dbmanager-app

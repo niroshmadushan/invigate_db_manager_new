@@ -24,4 +24,4 @@ jobs:
           npm run build
           
           # 5. Restart the PM2 process
-          pm2 restart dbmanager-app
+          pm2 restart DBmanager-app

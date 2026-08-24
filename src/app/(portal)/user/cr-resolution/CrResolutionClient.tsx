@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import { Loader2, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Hash, Users, Calendar, Ticket, CheckCircle2, XCircle, Shield, Server, AppWindow, Clock, Activity } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { usePermissions } from "~/hooks/usePermissions";
 import { PermissionDenied } from "~/components/PermissionDenied";
 
@@ -18,7 +19,7 @@ export function CrResolutionClient() {
   const [sortColumn, setSortColumn] = useState<SortColumn>("id");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const rowsPerPage = 20;
-  const { canView, isLoading: isPermsLoading } = usePermissions("cr-resolution");
+  const { canView, canEdit, isLoading: isPermsLoading } = usePermissions("cr-resolution");
 
   const [reslFilter, setReslFilter] = useState<number | undefined>(undefined);
   const [statusFilter, setStatusFilter] = useState<number | undefined>(undefined);
@@ -38,6 +39,21 @@ export function CrResolutionClient() {
     resl: reslFilter,
     status: statusFilter
   });
+
+  const utils = api.useUtils();
+  const updateStatusMutation = api.crResolution.updateStatus.useMutation({
+    onSuccess: () => {
+      toast.success("Status updated successfully.");
+      utils.crResolution.getAll.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to update status.");
+    }
+  });
+
+  const handleCancel = (id: number) => {
+    updateStatusMutation.mutate({ id, status: 2 });
+  };
 
   const handleSort = (column: SortColumn) => {
     if (sortColumn === column) {
@@ -170,7 +186,7 @@ export function CrResolutionClient() {
         );
       case 2:
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50 text-[11px] font-bold tracking-wider">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-800/50 text-[11px] font-bold tracking-wider">
             <XCircle className="w-3 h-3" />
             Cancel
           </span>
@@ -272,12 +288,17 @@ export function CrResolutionClient() {
                     <SortIcon column="created_date" />
                   </button>
                 </th>
+                {canEdit && (
+                  <th scope="col" className="px-6 py-3.5 font-extrabold tracking-wider w-24">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {isLoading && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-20 text-center">
+                  <td colSpan={canEdit ? 8 : 7} className="px-6 py-20 text-center">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <Loader2 className="h-6 w-6 text-purple-500 animate-spin" />
                       <p className="text-slate-500 dark:text-slate-400 font-medium text-xs">Fetching CR SLA details...</p>
@@ -287,14 +308,14 @@ export function CrResolutionClient() {
               )}
               {isError && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-20 text-center">
+                  <td colSpan={canEdit ? 8 : 7} className="px-6 py-20 text-center">
                     <p className="text-red-500 font-medium text-sm">Failed to load CR SLA data.</p>
                   </td>
                 </tr>
               )}
               {!isLoading && !isError && currentData.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-20 text-center">
+                  <td colSpan={canEdit ? 8 : 7} className="px-6 py-20 text-center">
                     <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">No records found.</p>
                   </td>
                 </tr>
@@ -375,6 +396,20 @@ export function CrResolutionClient() {
                         )}
                       </div>
                     </td>
+                    {canEdit && (
+                      <td className="px-6 py-5 pt-6 text-right">
+                        {cr.status === 0 && (
+                          <button
+                            onClick={() => handleCancel(cr.id)}
+                            disabled={updateStatusMutation.isPending && updateStatusMutation.variables?.id === cr.id}
+                            className="bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 hover:bg-rose-200 dark:hover:bg-rose-800/50 px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-colors disabled:opacity-50 inline-flex items-center gap-1.5 border border-rose-200 dark:border-rose-800/50"
+                          >
+                            <XCircle className="w-3 h-3" />
+                            Cancel
+                          </button>
+                        )}
+                      </td>
+                    )}
                   </motion.tr>
                 ))}
               </AnimatePresence>

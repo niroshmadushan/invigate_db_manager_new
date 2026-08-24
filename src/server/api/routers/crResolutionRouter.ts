@@ -79,4 +79,25 @@ export const crResolutionRouter = createTRPCRouter({
         });
       }
     }),
+
+  updateStatus: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.number(),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        await dbSla.query(
+          "UPDATE cr_sla SET status = ? WHERE id = ?",
+          [input.status, input.id]
+        );
+        return { success: true };
+      } catch (error) {
+        console.error("Error updating CR status:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update CR status",
+        });
+      }
+    }),
 });

@@ -58,7 +58,6 @@ export default function LoginPage() {
   // Auth Flow State
   const [authMode, setAuthMode] = useState<"LOGIN" | "OTP" | "FORGOT" | "RESET">("LOGIN");
   const [showSplash, setShowSplash] = useState(false);
-  const [otpFallbackCode, setOtpFallbackCode] = useState<string | null>(null);
 
   const { data: session, status } = useSession();
 
@@ -70,17 +69,9 @@ export default function LoginPage() {
 
   // tRPC Mutations
   const verifyCredentialsMutation = api.auth.verifyCredentialsAndSendOtp.useMutation({
-    onSuccess: (data) => {
+    onSuccess: () => {
       setAuthMode("OTP");
-      if (data.otpFallback) {
-        // Email failed on server — show OTP directly on screen
-        setOtpFallbackCode(data.otpFallback);
-        setOtp(data.otpFallback);
-        toast.warning("Email delivery unavailable. Your access code is shown below.");
-      } else {
-        setOtpFallbackCode(null);
-        toast.success("Identity verified. Access code sent to your email.");
-      }
+      toast.success("Identity verified. Access code sent to your email.");
       setLoading(false);
     },
     onError: (err) => {
@@ -290,14 +281,6 @@ export default function LoginPage() {
                 onSubmit={handleVerifyOtp} 
                 className="space-y-4"
               >
-                {/* Fallback OTP Banner — shown when email delivery failed */}
-                {otpFallbackCode && (
-                  <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-center">
-                    <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest mb-1">Email Unavailable — Use This Code</p>
-                    <p className="text-2xl font-mono font-black tracking-[0.4em] text-amber-300">{otpFallbackCode}</p>
-                    <p className="text-[10px] text-amber-500/70 mt-1">Code auto-filled below. Click Verify Login.</p>
-                  </div>
-                )}
 
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -320,7 +303,6 @@ export default function LoginPage() {
                     onClick={() => {
                       setAuthMode("LOGIN");
                       setOtp("");
-                      setOtpFallbackCode(null);
                     }}
                     className="w-1/3 bg-[#1C1C1E] hover:bg-[#252528] text-white text-[12px] font-semibold py-3 rounded-xl transition-colors"
                   >

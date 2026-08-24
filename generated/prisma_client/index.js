@@ -277,7 +277,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\NiroshMadushan\\Documents\\INVIGate-clean\\generated\\prisma_client",
+      "value": "E:\\Github\\invigate_db_manager_new\\generated\\prisma_client",
       "fromEnvVar": null
     },
     "config": {
@@ -291,7 +291,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\NiroshMadushan\\Documents\\INVIGate-clean\\prisma\\schema.prisma",
+    "sourceFilePath": "E:\\Github\\invigate_db_manager_new\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -305,6 +305,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

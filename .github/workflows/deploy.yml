@@ -14,7 +14,11 @@ jobs:
           # 1. Navigate to your project folder
           cd /var/www/html/dbmanager_app
           
-          # 2. Pull the latest code using the GitHub Action's built-in token
+          # 2. Reset any local changes (e.g. from generated Prisma files)
+          git reset --hard HEAD
+          git clean -fd
+          
+          # 3. Pull the latest code using the GitHub Action's built-in token
           git pull https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git deploy
           
           # 3. Install any new dependencies ignoring peer conflicts

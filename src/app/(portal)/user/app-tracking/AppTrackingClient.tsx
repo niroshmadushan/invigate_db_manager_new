@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { api } from "~/trpc/react";
-import { Loader2, CalendarDays, Hash, FileCheck2, User, Search, ChevronLeft, ChevronRight, LayoutList, Layers, ArrowUpDown, ChevronUp, ChevronDown } from "lucide-react";
+import { Loader2, CalendarDays, Hash, FileCheck2, User, Search, ChevronLeft, ChevronRight, LayoutList, Layers, ArrowUpDown, ChevronUp, ChevronDown, IdCard, Monitor } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { usePermissions } from "~/hooks/usePermissions";
@@ -30,10 +30,10 @@ export function AppTrackingClient() {
 
   const safeRecords = records || [];
   const totalPages = Math.ceil(safeRecords.length / itemsPerPage);
-  
+
   const sortedRecords = useMemo(() => {
     if (!sortConfig) return safeRecords;
-    
+
     return [...safeRecords].sort((a, b) => {
       let aVal: any = a[sortConfig.key as keyof typeof a];
       let bVal: any = b[sortConfig.key as keyof typeof b];
@@ -42,16 +42,16 @@ export function AppTrackingClient() {
         aVal = `${a.name || ''} ${a.lastname || ''}`.trim();
         bVal = `${b.name || ''} ${b.lastname || ''}`.trim();
       }
-      
+
       if (aVal === null || aVal === undefined) aVal = "";
       if (bVal === null || bVal === undefined) bVal = "";
 
       if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return sortConfig.direction === 'asc' 
+        return sortConfig.direction === 'asc'
           ? aVal.localeCompare(bVal)
           : bVal.localeCompare(aVal);
       }
-      
+
       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
       if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
@@ -111,12 +111,12 @@ export function AppTrackingClient() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-140px)] w-full relative">
-      
+
       {/* Header removed as requested */}
 
       <div className="flex flex-col h-full bg-white dark:bg-[#151923] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm shadow-slate-200/50 dark:shadow-none relative">
         <div className="flex-1 overflow-auto custom-scrollbar relative">
-          <table className="w-full text-left text-sm text-slate-500 dark:text-slate-400">
+          <table className="w-full min-w-[1400px] text-left text-sm text-slate-500 dark:text-slate-400">
             <thead className="sticky top-0 bg-slate-50/95 dark:bg-[#11151d]/95 backdrop-blur-md text-xs uppercase text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 z-10 shadow-sm">
               <tr>
                 <th scope="col" className="px-6 py-3 font-extrabold tracking-wider w-16">
@@ -161,6 +161,15 @@ export function AppTrackingClient() {
                     <SortIcon columnKey="fullname" />
                   </div>
                 </th>
+                <th scope="col" className="px-6 py-3 font-extrabold tracking-wider w-32 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors group" onClick={() => handleSort('staff_no')}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <IdCard className="w-3.5 h-3.5 text-slate-400" />
+                      Employee No
+                    </div>
+                    <SortIcon columnKey="staff_no" />
+                  </div>
+                </th>
                 <th scope="col" className="px-6 py-3 font-extrabold tracking-wider w-1/4 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors group" onClick={() => handleSort('app_access')}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -170,12 +179,21 @@ export function AppTrackingClient() {
                     <SortIcon columnKey="app_access" />
                   </div>
                 </th>
+                <th scope="col" className="px-6 py-3 font-extrabold tracking-wider cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors group" onClick={() => handleSort('app_name')}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Monitor className="w-3.5 h-3.5 text-slate-400" />
+                      Application Name
+                    </div>
+                    <SortIcon columnKey="app_name" />
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
               {isLoading && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
+                  <td colSpan={8} className="px-6 py-20 text-center">
                     <div className="flex flex-col items-center justify-center gap-3">
                       <Loader2 className="h-6 w-6 text-indigo-500 animate-spin" />
                       <p className="text-slate-500 dark:text-slate-400 font-medium text-xs">Fetching tracking records...</p>
@@ -185,14 +203,14 @@ export function AppTrackingClient() {
               )}
               {isError && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
+                  <td colSpan={8} className="px-6 py-20 text-center">
                     <p className="text-red-500 font-medium text-sm">Failed to load app tracking data.</p>
                   </td>
                 </tr>
               )}
               {!isLoading && !isError && safeRecords.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
+                  <td colSpan={8} className="px-6 py-20 text-center">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <Search className="w-8 h-8 text-slate-300 dark:text-slate-600 mb-2" />
                       <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">No records found.</p>
@@ -203,7 +221,7 @@ export function AppTrackingClient() {
               )}
               <AnimatePresence mode="popLayout">
                 {!isLoading && !isError && currentRecords.map((record, idx) => (
-                  <motion.tr 
+                  <motion.tr
                     key={`${record.staff_no}-${record.t_number}-${idx}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -220,7 +238,7 @@ export function AppTrackingClient() {
                     <td className="px-6 py-2">
                       {record.rec_method ? (
                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold
-                          ${record.rec_method.toLowerCase() === 'automated' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20' : 
+                          ${record.rec_method.toLowerCase() === 'automated' ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/20' :
                             'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 ring-1 ring-inset ring-blue-500/20'}`}
                         >
                           {record.rec_method}
@@ -240,6 +258,9 @@ export function AppTrackingClient() {
                         {formatFullName(record.name, record.lastname)}
                       </div>
                     </td>
+                    <td className="px-6 py-2 font-mono font-bold text-slate-700 dark:text-slate-300 text-xs">
+                      {record.staff_no ?? <span className="text-slate-400 italic font-sans font-normal">N/A</span>}
+                    </td>
                     <td className="px-6 py-2 font-medium text-slate-600 dark:text-slate-300 text-sm">
                       {record.app_access ? (
                         <span className="inline-block bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded text-xs">
@@ -247,6 +268,15 @@ export function AppTrackingClient() {
                         </span>
                       ) : (
                         <span className="text-slate-400 italic font-normal text-xs">No Access Logged</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-2 font-medium text-slate-600 dark:text-slate-300 text-sm">
+                      {record.app_name ? (
+                        <span className="inline-block bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded text-xs ring-1 ring-inset ring-purple-500/20">
+                          {record.app_name}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 italic font-normal text-xs">N/A</span>
                       )}
                     </td>
                   </motion.tr>
@@ -262,7 +292,7 @@ export function AppTrackingClient() {
             <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
               Showing <span className="font-bold text-slate-900 dark:text-white">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-bold text-slate-900 dark:text-white">{Math.min(currentPage * itemsPerPage, safeRecords.length)}</span> of <span className="font-bold text-slate-900 dark:text-white">{safeRecords.length}</span> records
             </p>
-            
+
             <div className="flex items-center gap-2">
               <button
                 onClick={goToPrevPage}
@@ -271,7 +301,7 @@ export function AppTrackingClient() {
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              
+
               <div className="flex items-center gap-1 px-2">
                 {[...Array(totalPages)].map((_, i) => {
                   const pageNumber = i + 1;
@@ -285,11 +315,10 @@ export function AppTrackingClient() {
                       <button
                         key={pageNumber}
                         onClick={() => setCurrentPage(pageNumber)}
-                        className={`w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all ${
-                          currentPage === pageNumber
-                            ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20"
-                            : "bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
-                        }`}
+                        className={`w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all ${currentPage === pageNumber
+                          ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/20"
+                          : "bg-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800"
+                          }`}
                       >
                         {pageNumber}
                       </button>
